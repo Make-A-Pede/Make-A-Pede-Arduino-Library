@@ -1,2 +1,2 @@
 # MakeAPede
-Arduino library for the Make-A-Pede ([makeapede.com](http://makeapede.com))
+Arduino library for the [Make-A-Pede](http://makeapede.com)
