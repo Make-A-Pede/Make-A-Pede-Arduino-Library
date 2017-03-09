@@ -70,14 +70,15 @@ class MakeAPede {
   private:
     Adafruit_MCP23017 mcp;
     uint8_t sensorData[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    uint8_t pods[8][3] = {{FORWARD, 16, 15},
-                          {FORWARD, 14, 13},
-                          {FORWARD, 12, 10},
+    uint8_t pods[8][3] = {{FORWARD, 11, 10},
                           {FORWARD, 9, 8},
-                          {FORWARD, 6, 5},
+                          {FORWARD, 7, 5},
+                          {FORWARD, 4, 3},
+                          {FORWARD, 2, 1},
                           {NONE, 0, 0},
                           {NONE, 0, 0},
                           {NONE, 0, 0}};
+
 
     uint8_t speakerPin = 0;
     uint8_t speakerValue = 0;

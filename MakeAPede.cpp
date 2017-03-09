@@ -118,7 +118,7 @@ uint8_t MakeAPede::getSensor(uint8_t pin) {
  * Configures a speaker on teh given pin
  */
 void MakeAPede::setupSpeaker(uint8_t pin) {
-  speakerPin = motorPorts[pin];
+  speakerPin = motorPorts[pin-1];
 }
 
 /**
@@ -179,12 +179,13 @@ void MakeAPede::updateMotors() {
     if(speakerPin != 0 && speakerValue > 0) {
       speakerTickCount++;
 
-      if(speakerTickCount < speakerValue) {
+      if(speakerTickCount <= speakerValue) {
         digitalWrite(speakerPin, HIGH);
-      } else if(speakerTickCount >= speakerValue && speakerTickCount < speakerValue*2) {
+      } else if(speakerTickCount > speakerValue && speakerTickCount <= speakerValue*2) {
         digitalWrite(speakerPin, LOW);
       } else {
         speakerTickCount = 0;
+        digitalWrite(speakerPin, HIGH);
       }
     }
     
@@ -227,11 +228,12 @@ void MakeAPede::btControl() {
   
       setForwardMotors(left, right);
 
-      setSpeaker(speaker == 1 ? 500 : 0);
+      setSpeaker(speaker);      
   
       btTimeOfLastMessage = millis();
     } else if(millis() - btTimeOfLastMessage > 5000) {
       setForwardMotors(0, 0);
+      setSpeaker(0);
     }
   }
 }
@@ -280,14 +282,12 @@ float MakeAPede::getUSSensor() {
   
   while(mcp.digitalRead(usEchoPin) != HIGH) {
     if(micros()-t > 1000000) return -1;
-    //backgroundTasks();
   }
   
   t = micros();
   
   while(mcp.digitalRead(usEchoPin) != LOW) {
     if(micros()-t > 1000000) return -1;
-    //backgroundTasks();
   }
   
   unsigned long elapsedTime = micros()-t;
