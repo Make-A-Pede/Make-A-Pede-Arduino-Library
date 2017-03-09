@@ -120,7 +120,7 @@ uint8_t MakeAPede::getSensor(uint8_t pin) {
 void MakeAPede::setupSpeaker(uint8_t pin) {
   speakerPin = motorPorts[pin];
 }
-'
+
 /**
  * Sets the speaker to the specified value
  */
