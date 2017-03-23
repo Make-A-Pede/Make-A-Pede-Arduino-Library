@@ -50,7 +50,9 @@ class MakeAPede {
     void setPodConfig(uint8_t podConfig[8][3]);
     void setForwardMotors(uint8_t lSetting, uint8_t rSetting);
     void setBackwardMotors(uint8_t lSetting, uint8_t rSetting);
+    void sensorPinMode(uint8_t pin, uint8_t mode);
     uint8_t getSensor(uint8_t pin);
+    void setOutput(uint8_t pin, uint8_t setting);
     void setupSpeaker(uint8_t pin);
     void setSpeaker(uint8_t setting);
 
@@ -69,6 +71,7 @@ class MakeAPede {
 
   private:
     Adafruit_MCP23017 mcp;
+  
     uint8_t sensorData[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     uint8_t pods[8][3] = {{FORWARD, 11, 10},
                           {FORWARD, 9, 8},

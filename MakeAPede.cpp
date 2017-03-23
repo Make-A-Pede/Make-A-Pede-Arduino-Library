@@ -108,6 +108,13 @@ void MakeAPede::setPodConfig(uint8_t podConfig[8][3]) {
 }
 
 /**
+ * Sets the pin mode of the specified pin on the MCP port expander
+ */
+void MakeAPede::sensorPinMode(uint8_t pin, uint8_t mode) {
+  mcp.pinMode(sensorPorts[pin - 1], mode);
+}
+
+/**
  * Gets the value of the digital sensor on the specified port. Returns either "HIGH" or "LOW".
  */
 uint8_t MakeAPede::getSensor(uint8_t pin) {
@@ -115,7 +122,14 @@ uint8_t MakeAPede::getSensor(uint8_t pin) {
 }
 
 /**
- * Configures a speaker on teh given pin
+ * Sets the pin on the MCP port expander previously set as an output using pinMode to the given setting
+ */
+void MakeAPede::setOutput(uint8_t pin, uint8_t setting) {
+  mcp.digitalWrite(pin, setting);
+}
+
+/**
+ * Configures a speaker on the given pin
  */
 void MakeAPede::setupSpeaker(uint8_t pin) {
   speakerPin = motorPorts[pin-1];
@@ -144,8 +158,6 @@ void MakeAPede::setupPWMPins() {
 
 /*
  * Updates motor values based on their PWM settings and handles the speaker
- * 
- * Speaker functionality is currently not working
  * 
  * Must be called every ~250 micros to control motors
  */
@@ -194,7 +206,7 @@ void MakeAPede::updateMotors() {
 }
 
 /*
- * Waits for the specified time is millis while periodically calling backgroundTasks
+ * Waits for the specified time in millis while periodically calling backgroundTasks
  */
 void MakeAPede::wait(unsigned long ms) {
   unsigned long t = millis();
@@ -236,13 +248,6 @@ void MakeAPede::btControl() {
       setSpeaker(0);
     }
   }
-}
-
-/**
- * Sends a int message over bluetooth
- */
-void MakeAPede::btSend(int data) {
-  Serial.print(data);
 }
 
 /**
