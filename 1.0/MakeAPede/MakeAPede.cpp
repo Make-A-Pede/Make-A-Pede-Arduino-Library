@@ -1,4 +1,4 @@
-/*
+/**
  * MakeAPede.cpp - Software library for the Make-A-Pede (makeapede.com)
  * Copyright (C) 2017 Automata-Development
  * 
@@ -24,14 +24,14 @@
  * Must be called in setup before anything other MaP calls
  */
 void MakeAPede::start() {
-  mcp.begin();
+  //mcp.begin();
 
   for (char i = 0; i < 16; i++) {
     pinMode(motorPorts[i], OUTPUT);
     digitalWrite(motorPorts[i], LOW);
 
-    mcp.pinMode(sensorPorts[i], INPUT);
-    mcp.pullUp(sensorPorts[i], HIGH);
+    //mcp.pinMode(sensorPorts[i], INPUT);
+    //mcp.pullUp(sensorPorts[i], HIGH);
   }
 
   setupPWMPins();
@@ -227,6 +227,7 @@ void MakeAPede::btControl() {
     if(Serial.available() > 0) {
       char command[9];
       Serial.readBytes(command, 9);
+      Serial.print(command);
       
       char* p;
       p = strtok(command, ":");
@@ -243,7 +244,7 @@ void MakeAPede::btControl() {
       setSpeaker(speaker);      
   
       btTimeOfLastMessage = millis();
-    } else if(millis() - btTimeOfLastMessage > 5000) {
+    } else if(millis() - btTimeOfLastMessage > 2000) {
       setForwardMotors(0, 0);
       setSpeaker(0);
     }
