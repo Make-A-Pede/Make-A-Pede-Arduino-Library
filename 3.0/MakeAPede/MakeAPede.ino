@@ -18,8 +18,14 @@
 
 #include "MakeAPede.h"
 
+unsigned long t = 0;
+
 void setup() {
   setupMaP();
+
+  enableObstacleAvoid(true);
+
+  usSetup(3, 2);
 }
 
 void loop() {
@@ -27,6 +33,6 @@ void loop() {
 }
 
 void userCode() {
-  
+
 }
 

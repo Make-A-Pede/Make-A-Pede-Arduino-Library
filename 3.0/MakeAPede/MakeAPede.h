@@ -21,8 +21,11 @@
 
 #include "Arduino.h"
 #include <CurieBLE.h>
+#include <limits.h>
 
 #define sign(i) (i < 0 ? -1 : 1)
+#define CM 28
+#define IN 71
 
 const int leftSpeedPin = 5;
 const int leftDirPin = 4;
@@ -40,12 +43,28 @@ void setRightSpeed(int s);
 void setLeftDirection(int dir);
 void setRightDirection(int dir);
 
+void usSetup(int trig, int echo);
+int usReadTime();
+int usReadDistance();
+int usReadDistance(int unit);
+
+void enableObstacleAvoid(bool enable);
+
 void userCode();
 
 extern BLEPeripheral blePeripheral;
 extern BLEService mapService;
-
 extern BLECharacteristic driveCharacteristic;
+
+extern int leftSpeed;
+extern int rightSpeed;
+extern int leftDir;
+extern int rightDir;
+
+extern int usTrigPin;
+extern int usEchoPin;
+
+extern bool obstacleAvoidEnabled;
 
 #endif
 
