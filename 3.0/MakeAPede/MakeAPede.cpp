@@ -32,6 +32,9 @@ int usEchoPin = 0;
 
 bool obstacleAvoidEnabled = false;
 
+/**
+ * Configures Bluetooth and outputs for Make-A-Pede. 
+ */
 void setupMaP() {
   Serial.begin(9600);
 
@@ -55,6 +58,11 @@ void setupMaP() {
   pinMode(rightDirPin, OUTPUT);
 }
 
+/**
+ * Receives and processes messages from connected Bluetooth device.
+ * 
+ * Calls userCode() in loop.
+ */
 void bluetoothControl() {
   BLECentral central = blePeripheral.central();
 
@@ -110,22 +118,36 @@ void bluetoothControl() {
   }
 }
 
+/**
+ * Set the speed of the left side of the drive
+ */
 void setLeftSpeed(int s) {
   analogWrite(leftSpeedPin, s);
 }
 
+/**
+ * Set the speed of the right side of the drive
+ */
 void setRightSpeed(int s) {
   analogWrite(rightSpeedPin, s);
 }
 
+/**
+ * Set the direction of the left side of the drive
+ */
 void setLeftDirection(int dir) {
   digitalWrite(leftDirPin, dir);
 }
 
+/**
+ * Set the direction of the right side of the drive
+ */
 void setRightDirection(int dir) {
   digitalWrite(rightDirPin, dir);
 }
-
+/**
+ * Setup the ultrasonic sensor with the given trigger and echo pins
+ */
 void usSetup(int trig, int echo) {
   usTrigPin = trig;
   usEchoPin = echo;
@@ -146,14 +168,25 @@ int usReadTime() {
   return pulseIn(usEchoPin, HIGH, 500);
 }
 
+/**
+ * Read distance from ultrasonic sensor in inches
+ */
 int usReadDistance() {
   return usReadDistance(IN);
 }
 
+/**
+ * Read distance from ultrasonic sensor in the specified units (CM or IN)
+ */
 int usReadDistance(int unit) {
   return usReadTime() / unit / 2;
 }
 
+/**
+ * Enable/disable the obstacle avoid program using the ultrasonic sensor
+ * 
+ * If enabled, robot will stop driving forwards 10 inches before hitting objects
+ */
 void enableObstacleAvoid(bool enable) {
   obstacleAvoidEnabled = enable;
 }

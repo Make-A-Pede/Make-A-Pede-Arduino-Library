@@ -44,7 +44,6 @@ void setLeftDirection(int dir);
 void setRightDirection(int dir);
 
 void usSetup(int trig, int echo);
-int usReadTime();
 int usReadDistance();
 int usReadDistance(int unit);
 

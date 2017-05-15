@@ -18,8 +18,6 @@
 
 #include "MakeAPede.h"
 
-unsigned long t = 0;
-
 void setup() {
   setupMaP();
 
