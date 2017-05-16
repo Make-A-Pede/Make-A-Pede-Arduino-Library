@@ -1,4 +1,4 @@
-This is the current version of the Make-A-Pede Arduino Library.
+This is the current version of the [Make-A-Pede](http://makeapede.com/) Arduino Library.
 
 # Usage
 ## Getting Started
@@ -7,7 +7,7 @@ Download all three files in this directory and place them in a folder named "Mak
 **The "Intel Curie Boards" package *must* be installed using the Boards Manager (Tools->Board->Boards Manager) and "Arduino/Genuino 101" must be selected in the Tools->Board menu.**
 
 ## User code
-Place any code you want to run repeatedly (such as that you would typically place in ```loop()```) inside the ```userCode()``` function.
+Place any code you want to run repeatedly (code that you would typically place in ```loop()```) inside the ```userCode()``` function.
 
 ## Ultrasonic sensor
 To initialize the ultrasonic sensor, call ```usSetup(echoPin, triggerPin)``` inside ```setup()```. To read the distance from the sensor, call ```usReadDistance()``` or ```usReadDistance(units)```.
