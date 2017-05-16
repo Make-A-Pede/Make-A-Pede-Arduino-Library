@@ -2,7 +2,7 @@ This is the current version of the [Make-A-Pede](http://makeapede.com/) Arduino 
 
 # Usage
 ## Getting Started
-Download all three files in this directory and place them in a folder named "Make-A-Pede". Open Make-A-Pede.ino in the Arduino IDE and upload the sketch to the robot.
+Download all three files in this directory and place them in a folder named "MakeAPede". Open MakeAPede.ino in the Arduino IDE and upload the sketch to the robot.
 
 **The "Intel Curie Boards" package must be installed using the Boards Manager (Tools->Board->Boards Manager) and "Arduino/Genuino 101" must be selected in the Tools->Board menu.**
 
