@@ -13,3 +13,6 @@ Place any code you want to run repeatedly (code that you would typically place i
 To initialize the ultrasonic sensor, call ```usSetup(triggerPin, echoPin)``` inside ```setup()```. To read the distance from the sensor, call ```usReadDistance()``` or ```usReadDistance(units)```.
 
 To enable/disable obstacle avoidance with the ultrasonic sensor, call ```enableObstacleAvoid(enable)``` in ```setup()```. This will prevent the robot from driving forwards if there is an object within 10 inches of the sensor.
+
+# Documentation
+See the [wiki](https://github.com/Automata-Development/Make-A-Pede/wiki) for complete documentation.
