@@ -78,11 +78,9 @@ void bluetoothControl() {
   BLECentral central = blePeripheral.central();
 
   if (central) {
-    Serial.print(F("Connected to central: "));
-    Serial.println(central.address());
 #endif
-
     unsigned long t = millis();
+    unsigned long t2 = millis();
 
 #if defined (__arc__)
     while (central.connected()) {
@@ -117,16 +115,18 @@ void bluetoothControl() {
       userCode();
 
       if(obstacleAvoidEnabled) {
-        Serial.println(usReadDistance());
+        if(usReadDistance() < 20) {
+          if (millis()-t2 > 500) {
+            if(leftDir == 0) {
+              leftSpeed = 0;
+            }
 
-        if(usReadDistance() < 10) {
-          if(leftDir == 0) {
-            leftSpeed = 0;
+            if(rightDir == 0) {
+              rightSpeed = 0;
+            }
           }
-
-          if(rightDir == 0) {
-            rightSpeed = 0;
-          }
+        } else {
+          t2 = millis();
         }
       }
 
@@ -140,8 +140,6 @@ void bluetoothControl() {
     }
 
 #if defined (__arc__)
-    Serial.print(F("Disconnected from central: "));
-    Serial.println(central.address());
   }
 #endif
 }
