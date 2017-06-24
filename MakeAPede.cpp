@@ -91,6 +91,8 @@ void bluetoothControl() {
         strncpy(command, (char*) driveCharacteristic.value(), driveCharacteristic.valueLength());
 
         processCommand(command);
+
+        t = millis();
       }
 #else
     while(true) {
@@ -102,8 +104,15 @@ void bluetoothControl() {
         Serial.readBytes(command, 8);
 #endif
         processCommand(command);
+
+        t = millis();
       }
 #endif
+
+      if(millis()-t > 5000) {
+        leftSpeed = 0;
+        rightSpeed = 0;
+      }
 
       userCode();
 
@@ -119,8 +128,6 @@ void bluetoothControl() {
             rightSpeed = 0;
           }
         }
-
-        t = millis();
       }
 
       setLeftSpeed(leftSpeed);
