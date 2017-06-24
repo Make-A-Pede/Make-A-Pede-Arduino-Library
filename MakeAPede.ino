@@ -18,45 +18,14 @@
 
 #include "MakeAPede.h"
 
-MakeAPede MaP;
-
 void setup() {
-  //pinMode(5, OUTPUT);
-  //pinMode(6, OUTPUT);
-
-  MaP.start();
-
-  Serial.println("Setup");
-
-  //MaP.setBTEnabled(true);
+  setupMaP();
 }
 
 void loop() {
-  //MaP.backgroundTasks();
-
-  Serial.println("Up!");
-  for(int i = 0; i <= 100; i++) {
-    MaP.setLeftMotors(i);
-    MaP.setRightMotors(i);
-
-    delay(15);
-  }
-
-  delay(1000);
-  
-  Serial.println("Down!");
-  for(int i = 100; i >= 0; i--) {
-    MaP.setLeftMotors(i);
-    MaP.setRightMotors(i);
-
-    delay(15);
-  }
-
-  delay(1000);
- 
-  //analogWrite(5, 0);
-  //analogWrite(6, 0);
-
-  //delayMicroseconds(250);
+  bluetoothControl();
 }
 
+void userCode() {
+
+}

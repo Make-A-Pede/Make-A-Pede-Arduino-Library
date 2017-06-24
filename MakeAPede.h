@@ -1,17 +1,17 @@
 /*
  * MakeAPede.h - Software library for the Make-A-Pede (makeapede.com)
  * Copyright (C) 2017 Automata-Development
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -20,8 +20,11 @@
 #define MakeAPede_h
 
 #include "Arduino.h"
-#include <CurieBLE.h>
 #include <limits.h>
+
+#if defined (__arc__)
+#include <CurieBLE.h>
+#endif
 
 #define sign(i) (i < 0 ? -1 : 1)
 #define CM 28
@@ -36,6 +39,7 @@ const int rightDirPin = 7;
 void setupMaP();
 
 void bluetoothControl();
+void processCommand(char command[]);
 
 void setLeftSpeed(int s);
 void setRightSpeed(int s);
@@ -51,9 +55,11 @@ void enableObstacleAvoid(bool enable);
 
 void userCode();
 
+#if defined (__arc__)
 extern BLEPeripheral blePeripheral;
 extern BLEService mapService;
 extern BLECharacteristic driveCharacteristic;
+#endif
 
 extern int leftSpeed;
 extern int rightSpeed;
@@ -62,8 +68,8 @@ extern int rightDir;
 
 extern int usTrigPin;
 extern int usEchoPin;
+extern int usGroundPin;
 
 extern bool obstacleAvoidEnabled;
 
 #endif
-
