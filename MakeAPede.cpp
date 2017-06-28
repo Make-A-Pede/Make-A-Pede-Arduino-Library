@@ -66,6 +66,30 @@ void setupMaP() {
   pinMode(rightDirPin, OUTPUT);
 }
 
+void processCommand(char command[]) {
+    int left = 0;
+    int right = 0;
+
+    char* p;
+    p = strtok(command, ":");
+    left = atoi(p)-127;
+
+    p = strtok(NULL, ":");
+    right = atoi(p)-127;
+
+    leftSpeed = abs(left)*2;
+    rightSpeed = abs(right)*2;
+
+    leftSpeed = min(255, leftSpeed);
+    leftSpeed = max(-255, leftSpeed);
+
+    rightSpeed = min(255, rightSpeed);
+    rightSpeed = max(-255, rightSpeed);
+
+    leftDir = sign(left) == 1 ? LOW : HIGH;
+    rightDir = sign(right) == 1 ? LOW : HIGH;
+}
+
 /**
  * Receives and processes messages from connected Bluetooth device.
  *
@@ -144,30 +168,6 @@ void bluetoothControl() {
 #endif
 }
 
-void processCommand(char command[]) {
-    int left = 0;
-    int right = 0;
-
-    char* p;
-    p = strtok(command, ":");
-    left = atoi(p)-127;
-
-    p = strtok(NULL, ":");
-    right = atoi(p)-127;
-
-    leftSpeed = abs(left)*2;
-    rightSpeed = abs(right)*2;
-
-    leftSpeed = min(255, leftSpeed);
-    leftSpeed = max(-255, leftSpeed);
-
-    rightSpeed = min(255, rightSpeed);
-    rightSpeed = max(-255, rightSpeed);
-
-    leftDir = sign(left) == 1 ? LOW : HIGH;
-    rightDir = sign(right) == 1 ? LOW : HIGH;
-}
-
 /**
  * Set the speed of the left side of the drive in the range of 0-255
  */
@@ -229,12 +229,7 @@ unsigned long usReadTime() {
       return INT_MAX;
   }
 
-  //unsigned long t = pulseIn(usEchoPin, HIGH, 10000);
-  unsigned long t = micros()-startMicros;
-
-  //Serial.println(t);
-
-  return t;
+  return micros()-startMicros;
 }
 
 /**

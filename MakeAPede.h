@@ -39,7 +39,6 @@ const int rightDirPin = 7;
 void setupMaP();
 
 void bluetoothControl();
-void processCommand(char command[]);
 
 void setLeftSpeed(int s);
 void setRightSpeed(int s);
