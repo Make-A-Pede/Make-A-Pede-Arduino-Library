@@ -25,5 +25,13 @@ void setup() {
 }
 
 void loop() { bluetoothControl(); }
+float target = 180;
+byte valueLeft = 0;
+byte valueRight = 0;
+float value = 0;
 
-void userCode() {}
+void userCode() {
+    value = PDo(heading, target);
+    valueRight += (byte) value;
+    valueLeft -= (byte) value;
+}

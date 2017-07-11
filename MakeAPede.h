@@ -57,6 +57,8 @@ const int rightDirPin = 7;
 const int leftAntennaePin = 12;
 const int rightAntennaePin = 13;
 
+int PDo;
+
 void setupMaP();
 
 void bluetoothControl();
