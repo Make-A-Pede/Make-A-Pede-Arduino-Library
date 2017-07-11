@@ -21,15 +21,9 @@
 void setup() {
   setupMaP();
 
-  usSetup(2, 3);
-
   enableObstacleAvoid(true);
 }
 
-void loop() {
-  bluetoothControl();
-}
+void loop() { bluetoothControl(); }
 
-void userCode() {
-
-}
+void userCode() {}

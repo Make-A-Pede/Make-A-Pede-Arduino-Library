@@ -22,19 +22,40 @@
 #include "Arduino.h"
 #include <limits.h>
 
+#define USE_IMU
+#define USE_DISPLAY
+
 #if defined (__arc__)
 #include <CurieBLE.h>
+
+#if defined(USE_IMU)
+#include <CurieTimerOne.h>
+#include <CurieIMU.h>
+#include <MadgwickAHRS.h>
+#endif
+#endif
+
+#if defined(USE_DISPLAY)
+#include <Wire.h>
+#include <Adafruit_SSD1306.h>
+#include <Adafruit_GFX.h>
+
+#define OUTER_EYE_WIDTH 30
+#define OUTER_EYE_HEIGHT 20
+#define INNER_EYE_WIDTH 16
+#define INNER_EYE_HEIGHT 10
 #endif
 
 #define sign(i) (i < 0 ? -1 : 1)
-#define CM 28
-#define IN 71
 
 const int leftSpeedPin = 5;
 const int leftDirPin = 4;
 
 const int rightSpeedPin = 6;
 const int rightDirPin = 7;
+
+const int leftAntennaePin = 12;
+const int rightAntennaePin = 13;
 
 void setupMaP();
 
@@ -46,9 +67,8 @@ void setRightSpeed(int s);
 void setLeftDirection(int dir);
 void setRightDirection(int dir);
 
-void usSetup(int trig, int echo);
-int usReadDistance();
-int usReadDistance(int unit);
+int getLeftAntennae();
+int getRightAntennae();
 
 void enableObstacleAvoid(bool enable);
 
@@ -58,6 +78,25 @@ void userCode();
 extern BLEPeripheral blePeripheral;
 extern BLEService mapService;
 extern BLECharacteristic driveCharacteristic;
+
+#if defined(USE_IMU)
+extern BLECharacteristic headingCharacteristic;
+
+void getHeading();
+void getHeadingInterrupt();
+
+extern Madgwick filter;
+extern unsigned long microsPerReading;
+extern float heading;
+#endif
+#endif
+
+#if defined(USE_DISPLAY)
+void setupDisplay();
+void showEyes();
+
+extern Adafruit_SSD1306 displayRight;
+extern Adafruit_SSD1306 displayLeft;
 #endif
 
 extern int leftSpeed;
