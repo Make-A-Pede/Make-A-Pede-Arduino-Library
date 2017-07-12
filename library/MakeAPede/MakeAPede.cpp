@@ -56,7 +56,7 @@ static constexpr size_t HeadingCharacteristicSize = sizeof(float);
  * Should be called in setup()
  */
 void setupMaP() {
-  Serial.begin(9600);
+  Serial.begin(115200);
 
 #if defined(__arc__)
   mapService = BLEService("19B10000-E8F2-537E-4F6C-D104768A1214");
@@ -110,7 +110,7 @@ void processCommand(char command[]) {
   int left = 0;
   int right = 0;
 
-  char *p;
+  char* p;
   p = strtok(command, ":");
   left = atoi(p) - 127;
 
