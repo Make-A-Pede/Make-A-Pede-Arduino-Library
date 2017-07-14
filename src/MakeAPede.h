@@ -22,8 +22,8 @@
 #include "Arduino.h"
 #include <limits.h>
 
-#define USE_IMU
-#define USE_DISPLAY
+//#define USE_IMU
+//#define USE_DISPLAY
 
 #if defined (__arc__)
 #include <CurieBLE.h>
@@ -82,7 +82,6 @@ extern BLECharacteristic driveCharacteristic;
 #if defined(USE_IMU)
 extern BLECharacteristic headingCharacteristic;
 
-void getHeading();
 void getHeadingInterrupt();
 
 extern Madgwick filter;
@@ -103,10 +102,6 @@ extern int leftSpeed;
 extern int rightSpeed;
 extern int leftDir;
 extern int rightDir;
-
-extern int usTrigPin;
-extern int usEchoPin;
-extern int usGroundPin;
 
 extern bool obstacleAvoidEnabled;
 

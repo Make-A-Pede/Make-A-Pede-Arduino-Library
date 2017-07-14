@@ -1,0 +1,38 @@
+#######################################
+# Syntax Coloring Map For Make-A-Pede
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+setupMaP	KEYWORD2
+bluetoothControl	KEYWORD2
+setLeftSpeed	KEYWORD2
+setRightSpeed	KEYWORD2
+setLeftDirection	KEYWORD2
+setRightDirection	KEYWORD2
+getLeftAntennae	KEYWORD2
+getRightAntennae	KEYWORD2
+enableObstacleAvoid	KEYWORD2
+userCode	KEYWORD2
+getHeadingInterrupt	KEYWORD2
+setupDisplay	KEYWORD2
+showEyes	KEYWORD2
+
+#######################################
+# Instances (KEYWORD2)
+#######################################
+leftSpeed	KEYWORD2
+rightSpeed	KEYWORD2
+leftDir	KEYWORD2
+rightDir	KEYWORD2
+heading	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################

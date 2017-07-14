@@ -1,5 +1,5 @@
 /**
- * MakeAPede.ino - Software library for the Make-A-Pede (makeapede.com)
+ * ObstacleAvoidAutonomous.ino - Software library for the Make-A-Pede (makeapede.com)
  * Copyright (C) 2017 Automata-Development
  *
  * This program is free software: you can redistribute it and/or modify
