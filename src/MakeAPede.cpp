@@ -100,8 +100,10 @@ void setupMaP() {
   pinMode(leftAntennaePin, INPUT);
   pinMode(rightAntennaePin, INPUT);
 
+#if defined(USE_DISPLAY)
   setupDisplay();
   showEyes();
+#endif
 }
 
 void processCommand(char command[]) {
