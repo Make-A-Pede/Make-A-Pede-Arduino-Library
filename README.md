@@ -9,8 +9,5 @@ Download or clone the repository. Open library/MakeAPede/MakeAPede.ino in the Ar
 
 **If using the Arduino 101, the "Intel Curie Boards" package must be installed using the Boards Manager (Tools->Board->Boards Manager) and "Arduino/Genuino 101" must be selected in the Tools->Board menu.**
 
-## User code
-Place any code you want to run repeatedly (code that you would typically place in ```loop()```) inside the ```userCode()``` function.
-
 # Documentation
 See the [wiki](https://github.com/Automata-Development/Make-A-Pede/wiki) for complete documentation.
