@@ -82,7 +82,7 @@ extern BLECharacteristic driveCharacteristic;
 #if defined(USE_IMU)
 extern BLECharacteristic headingCharacteristic;
 
-void getHeadingInterrupt();
+void getHeading();
 
 extern Madgwick filter;
 extern unsigned long microsPerReading;

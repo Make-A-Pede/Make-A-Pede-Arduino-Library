@@ -145,7 +145,7 @@ void bluetoothControl() {
 
   if (central) {
 #if defined(USE_IMU)
-    CurieTimerOne.start(microsPerReading, getHeadingInterrupt);
+    CurieTimerOne.start(microsPerReading, getHeading);
 #endif
 #endif
     unsigned long t, t2;
@@ -269,7 +269,7 @@ float convertRawGyro(int gRaw) {
   return g;
 }
 
-void getHeadingInterrupt() {
+void getHeading() {
   if (!CurieIMU.dataReady())
     return;
 
