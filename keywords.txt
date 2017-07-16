@@ -20,7 +20,7 @@ getLeftAntennae	KEYWORD2
 getRightAntennae	KEYWORD2
 enableObstacleAvoid	KEYWORD2
 userCode	KEYWORD2
-getHeadingInterrupt	KEYWORD2
+getHeading	KEYWORD2
 setupDisplay	KEYWORD2
 showEyes	KEYWORD2
 
