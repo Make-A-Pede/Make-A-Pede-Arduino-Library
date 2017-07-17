@@ -177,7 +177,11 @@ void bluetoothControl() {
 
 #else
   while (true) {
+#if defined(__AVR_ATmega32U4__) || defined(__AVR_ATmega16U4__)
     if (Serial1.available() > 0) {
+#else
+    if (Serial.available() > 0) {
+#endif
       char command[8];
 #if defined(__AVR_ATmega32U4__) || defined(__AVR_ATmega16U4__)
       Serial1.readBytes(command, 8);
