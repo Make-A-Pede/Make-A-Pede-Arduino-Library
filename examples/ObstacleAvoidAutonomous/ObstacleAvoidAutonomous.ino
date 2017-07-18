@@ -1,6 +1,6 @@
 /**
- * ObstacleAvoidAutonomous.ino - Software library for the Make-A-Pede (makeapede.com)
- * Copyright (C) 2017 Automata-Development
+ * ObstacleAvoidAutonomous.ino - Software library for the Make-A-Pede
+ * (makeapede.com) Copyright (C) 2017 Automata-Development
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,51 +21,56 @@
 #define OBSTACLE_LEFT (getLeftAntennae() == HIGH)
 #define OBSTACLE_RIGHT (getRightAntennae() == HIGH)
 
-void setup() {
-  setupMaP();
+int leftSpeedPin = 5;
+int leftDirPin = 4;
 
-  enableObstacleAvoid(true);
+int rightSpeedPin = 6;
+int rightDirPin = 7;
+
+int leftAntennaePin = 12;
+int rightAntennaePin = 13;
+
+void setup() {
+  setupMaP(leftSpeedPin, leftDirPin, rightSpeedPin, rightDirPin, leftAntennaePin, rightAntennaePin);
 
   while (!OBSTACLE_LEFT && !OBSTACLE_RIGHT);
 
   delay(2000);
-
-  while (true) {
-    setLeftDirection(LOW);
-    setRightDirection(LOW);
-
-    setLeftSpeed(160);
-    setRightSpeed(160);
-
-    while (!OBSTACLE_LEFT && !OBSTACLE_RIGHT);
-
-    setLeftSpeed(0);
-    setRightSpeed(0);
-
-    delay(250);
-
-    setLeftDirection(HIGH);
-    setRightDirection(HIGH);
-
-    if (OBSTACLE_LEFT) {
-      setLeftSpeed(90);
-      setRightSpeed(200);
-    } else if (OBSTACLE_RIGHT) {
-      setLeftSpeed(200);
-      setRightSpeed(90);
-    }
-
-    while (OBSTACLE_LEFT || OBSTACLE_RIGHT);
-
-    delay(1500);
-
-    setLeftSpeed(0);
-    setRightSpeed(0);
-
-    delay(250);
-  }
 }
 
-void loop() {}
+void loop() {
+  setLeftDirection(LOW);
+  setRightDirection(LOW);
+
+  setLeftSpeed(160);
+  setRightSpeed(160);
+
+  while (!OBSTACLE_LEFT && !OBSTACLE_RIGHT);
+
+  setLeftSpeed(0);
+  setRightSpeed(0);
+
+  delay(250);
+
+  setLeftDirection(HIGH);
+  setRightDirection(HIGH);
+
+  if (OBSTACLE_LEFT) {
+    setLeftSpeed(90);
+    setRightSpeed(200);
+  } else if (OBSTACLE_RIGHT) {
+    setLeftSpeed(200);
+    setRightSpeed(90);
+  }
+
+  while (OBSTACLE_LEFT || OBSTACLE_RIGHT);
+
+  delay(1500);
+
+  setLeftSpeed(0);
+  setRightSpeed(0);
+
+  delay(250);
+}
 
 void userCode() {}

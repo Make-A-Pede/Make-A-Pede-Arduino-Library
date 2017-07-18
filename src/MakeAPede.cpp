@@ -38,6 +38,15 @@ Adafruit_SSD1306 displayRight = Adafruit_SSD1306();
 Adafruit_SSD1306 displayLeft = Adafruit_SSD1306();
 #endif
 
+int lSpeedPin = 5;
+int lDirPin = 4;
+
+int rSpeedPin = 6;
+int rDirPin = 7;
+
+int lAntennaePin = 12;
+int rAntennaePin = 13;
+
 int leftSpeed = 0;
 int rightSpeed = 0;
 int leftDir = 0;
@@ -55,8 +64,17 @@ static constexpr size_t HeadingCharacteristicSize = sizeof(float);
  *
  * Should be called in setup()
  */
-void setupMaP() {
+void setupMaP(int lsp, int ldp, int rsp, int rdp, int lap, int rap) {
   Serial.begin(115200);
+
+  lSpeedPin = lsp;
+  lDirPin = ldp;
+
+  rSpeedPin = rsp;
+  rDirPin = rdp;
+
+  lAntennaePin = lap;
+  rAntennaePin = rap;
 
 #if defined(__arc__)
   mapService = BLEService("19B10000-E8F2-537E-4F6C-D104768A1214");
@@ -91,14 +109,14 @@ void setupMaP() {
   Serial1.begin(9600);
 #endif
 
-  pinMode(leftSpeedPin, OUTPUT);
-  pinMode(leftDirPin, OUTPUT);
+  pinMode(lSpeedPin, OUTPUT);
+  pinMode(lDirPin, OUTPUT);
 
-  pinMode(rightSpeedPin, OUTPUT);
-  pinMode(rightDirPin, OUTPUT);
+  pinMode(rSpeedPin, OUTPUT);
+  pinMode(rDirPin, OUTPUT);
 
-  pinMode(leftAntennaePin, INPUT);
-  pinMode(rightAntennaePin, INPUT);
+  pinMode(lAntennaePin, INPUT);
+  pinMode(rAntennaePin, INPUT);
 
 #if defined(USE_DISPLAY)
   setupDisplay();
@@ -232,28 +250,28 @@ void bluetoothControl() {
 /**
  * Set the speed of the left side of the drive in the range of 0-255
  */
-void setLeftSpeed(int s) { analogWrite(leftSpeedPin, s); }
+void setLeftSpeed(int s) { analogWrite(lSpeedPin, s); }
 
 /**
  * Set the speed of the right side of the drive in the range of 0-255
  */
-void setRightSpeed(int s) { analogWrite(rightSpeedPin, s); }
+void setRightSpeed(int s) { analogWrite(rSpeedPin, s); }
 
 /**
  * Set the direction of the left side of the drive (LOW (forwards) or HIGH
  * (backwards))
  */
-void setLeftDirection(int dir) { digitalWrite(leftDirPin, dir); }
+void setLeftDirection(int dir) { digitalWrite(lDirPin, dir); }
 
 /**
  * Set the direction of the right side of the drive (LOW (forwards) or HIGH
  * (backwards))
  */
-void setRightDirection(int dir) { digitalWrite(rightDirPin, dir); }
+void setRightDirection(int dir) { digitalWrite(rDirPin, dir); }
 
-int getLeftAntennae() { return digitalRead(leftAntennaePin); }
+int getLeftAntennae() { return digitalRead(lAntennaePin); }
 
-int getRightAntennae() { return digitalRead(rightAntennaePin); }
+int getRightAntennae() { return digitalRead(rAntennaePin); }
 
 /**
  * Enable/disable the obstacle avoid program using the ultrasonic sensor

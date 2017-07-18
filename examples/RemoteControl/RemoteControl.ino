@@ -18,8 +18,17 @@
 
 #include "MakeAPede.h"
 
+int leftSpeedPin = 5;
+int leftDirPin = 4;
+
+int rightSpeedPin = 6;
+int rightDirPin = 7;
+
+int leftAntennaePin = 12;
+int rightAntennaePin = 13;
+
 void setup() {
-  setupMaP();
+  setupMaP(leftSpeedPin, leftDirPin, rightSpeedPin, rightDirPin, leftAntennaePin, rightAntennaePin);
 
   enableObstacleAvoid(true);
 }

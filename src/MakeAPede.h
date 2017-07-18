@@ -48,16 +48,16 @@
 
 #define sign(i) (i < 0 ? -1 : 1)
 
-const int leftSpeedPin = 5;
-const int leftDirPin = 4;
+extern int lSpeedPin;
+extern int lDirPin;
 
-const int rightSpeedPin = 6;
-const int rightDirPin = 7;
+extern int rSpeedPin;
+extern int rDirPin;
 
-const int leftAntennaePin = 12;
-const int rightAntennaePin = 13;
+extern int lAntennaePin;
+extern int rAntennaePin;
 
-void setupMaP();
+void setupMaP(int lsp = 5, int ldp = 4, int rsp = 6, int rdp = 7, int lap = 12, int rap = 13);
 
 void bluetoothControl();
 
