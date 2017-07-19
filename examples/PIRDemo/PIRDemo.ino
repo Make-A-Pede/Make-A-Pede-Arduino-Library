@@ -18,18 +18,27 @@
 
 #include "MakeAPede.h"
 
-// Define Sensor Pins
-int PIR = 2;
-
 #define OBSTACLE_LEFT (getLeftAntennae() == HIGH)
 #define OBSTACLE_RIGHT (getRightAntennae() == HIGH)
-#define MOTION (digitalRead(PIR) == HIGH)
+#define MOTION (digitalRead(pirPin) == HIGH)
+
+// Define Sensor Pins
+int pirPin = 2;
+
+int leftSpeedPin = 5;
+int leftDirPin = 4;
+
+int rightSpeedPin = 6;
+int rightDirPin = 7;
+
+int leftAntennaePin = 12;
+int rightAntennaePin = 13;
 
 void setup() {
-  setupMaP();
+  setupMaP(leftSpeedPin, leftDirPin, rightSpeedPin, rightDirPin, leftAntennaePin, rightAntennaePin);
   
   // Initialize the PIR sensor pin as an input
-  pinMode(PIR, INPUT);
+  pinMode(pirPin, INPUT);
 
   // Wait for an antenna to be triggered to start the program
   while (!OBSTACLE_LEFT && !OBSTACLE_RIGHT);
