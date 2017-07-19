@@ -250,12 +250,20 @@ void bluetoothControl() {
 /**
  * Set the speed of the left side of the drive in the range of 0-255
  */
-void setLeftSpeed(int s) { analogWrite(lSpeedPin, s); }
+void setLeftSpeed(int s) {
+  int speed = min(255, s);
+  speed = max(0, speed);
+  analogWrite(lSpeedPin, speed);
+}
 
 /**
  * Set the speed of the right side of the drive in the range of 0-255
  */
-void setRightSpeed(int s) { analogWrite(rSpeedPin, s); }
+void setRightSpeed(int s) {
+  int speed = min(255, s);
+  speed = max(0, speed);
+  analogWrite(rSpeedPin, speed);
+}
 
 /**
  * Set the direction of the left side of the drive (LOW (forwards) or HIGH
