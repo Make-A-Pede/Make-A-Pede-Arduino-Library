@@ -17,5 +17,8 @@ Simple remote program using smartphone Bluetooth control.
 ### ObstacleAvoidAutonomous
 Simple autonomous program that avoids obstacles using the antennae.
 
+### PIRDemo
+Autonomous program that will make the Make-A-Pede start driving around when it detects motion.
+
 # Documentation
 See the [wiki](https://github.com/Automata-Development/Make-A-Pede/wiki) for complete documentation.
