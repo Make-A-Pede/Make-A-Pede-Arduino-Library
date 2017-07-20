@@ -65,7 +65,7 @@ static constexpr size_t HeadingCharacteristicSize = sizeof(float);
  * Should be called in setup()
  */
 void setupMaP(int lsp, int ldp, int rsp, int rdp, int lap, int rap) {
-  Serial.begin(115200);
+  Serial.begin(9600);
 
   lSpeedPin = lsp;
   lDirPin = ldp;
@@ -127,27 +127,49 @@ void setupMaP(int lsp, int ldp, int rsp, int rdp, int lap, int rap) {
 void processCommand(char command[]) {
   Serial.println(command);
 
-  int left = 0;
-  int right = 0;
+  int radius = 0;
+  float angle = 0;
 
   char* p;
   p = strtok(command, ":");
-  left = atoi(p) - 127;
+  radius = atoi(p);
 
   p = strtok(NULL, ":");
-  right = atoi(p) - 127;
+  angle = atoi(p);
 
-  leftSpeed = abs(left) * 2;
-  rightSpeed = abs(right) * 2;
+  angle = (angle * ((2.0*PI)/360.0));
+
+  int x = radius * cos(angle);
+  int y = radius * sin(angle);
+
+  leftSpeed = (y + x)*(255.0/100.0);
+  rightSpeed = (y - x)*(255.0/100.0);
+
+  leftDir = sign(leftSpeed) == 1 ? LOW : HIGH;
+  rightDir = sign(rightSpeed) == 1 ? LOW : HIGH;
+
+  leftSpeed = abs(leftSpeed);
+  rightSpeed = abs(rightSpeed);
 
   leftSpeed = min(255, leftSpeed);
-  leftSpeed = max(-255, leftSpeed);
+  leftSpeed = max(0, leftSpeed);
 
   rightSpeed = min(255, rightSpeed);
-  rightSpeed = max(-255, rightSpeed);
+  rightSpeed = max(0, rightSpeed);
 
-  leftDir = sign(left) == 1 ? LOW : HIGH;
-  rightDir = sign(right) == 1 ? LOW : HIGH;
+  if(sign(y) == -1) {
+    int temp = leftSpeed;
+    leftSpeed = rightSpeed;
+    rightSpeed = temp;
+  }
+
+  if(rightDir != leftDir) {
+    if(sign(x) > 0) {
+			rightSpeed = 0;
+		} else {
+			leftSpeed = 0;
+		}
+  }
 }
 
 /**
