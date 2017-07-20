@@ -127,18 +127,22 @@ void setupMaP(int lsp, int ldp, int rsp, int rdp, int lap, int rap) {
 void processCommand(char command[]) {
   Serial.println(command);
 
-  int left = 0;
-  int right = 0;
+  int radius = 0;
+  int angle = 0;
 
   char* p;
   p = strtok(command, ":");
-  left = atoi(p) - 127;
+  radius = atoi(p);
 
   p = strtok(NULL, ":");
-  right = atoi(p) - 127;
+  angle = atoi(p);
 
-  leftSpeed = abs(left) * 2;
-  rightSpeed = abs(right) * 2;
+  angle *= (int) (180/PI);
+
+  int x = radius * cos(angle);
+  int y = radius * sin(angle);
+
+  
 
   leftSpeed = min(255, leftSpeed);
   leftSpeed = max(-255, leftSpeed);
@@ -146,8 +150,8 @@ void processCommand(char command[]) {
   rightSpeed = min(255, rightSpeed);
   rightSpeed = max(-255, rightSpeed);
 
-  leftDir = sign(left) == 1 ? LOW : HIGH;
-  rightDir = sign(right) == 1 ? LOW : HIGH;
+  leftDir = sign(leftSpeed) == 1 ? LOW : HIGH;
+  rightDir = sign(rightSpeed) == 1 ? LOW : HIGH;
 }
 
 /**
