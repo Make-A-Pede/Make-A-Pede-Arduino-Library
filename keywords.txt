@@ -19,6 +19,7 @@ setRightDirection	KEYWORD2
 getLeftAntennae	KEYWORD2
 getRightAntennae	KEYWORD2
 enableObstacleAvoid	KEYWORD2
+enableGyroControl	KEYWORD2
 userCode	KEYWORD2
 getHeading	KEYWORD2
 setupDisplay	KEYWORD2

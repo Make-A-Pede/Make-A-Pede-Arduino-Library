@@ -1,4 +1,4 @@
-/*
+/**
  * MakeAPede.h - Software library for the Make-A-Pede (makeapede.com)
  * Copyright (C) 2017 Automata-Development
  *
@@ -16,14 +16,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Uncomment the line below to use Arduino 101's built in gyroscope and/or accelerometer
+ * You will need to install the Madgwick library using the library manager
+ */
+#define USE_IMU
+
+/**
+ * Uncomment the line below to use the OLED eyes add-on
+ * You will need to install the Adafruit SSD1306 library and the Adafruit GFX library using the library manager
+ */
+//#define USE_DISPLAY
+
 #ifndef MakeAPede_h
 #define MakeAPede_h
 
 #include "Arduino.h"
 #include <limits.h>
-
-//#define USE_IMU
-//#define USE_DISPLAY
 
 #if defined (__arc__)
 #include <CurieBLE.h>
@@ -32,6 +41,9 @@
 #include <CurieTimerOne.h>
 #include <CurieIMU.h>
 #include <MadgwickAHRS.h>
+
+#define Kp 0.05
+#define Kp2 0.5
 #endif
 #endif
 
@@ -83,6 +95,7 @@ extern BLECharacteristic driveCharacteristic;
 extern BLECharacteristic headingCharacteristic;
 
 void getHeading();
+void enableGyroControl(bool enable);
 
 extern Madgwick filter;
 extern unsigned long microsPerReading;
@@ -104,5 +117,6 @@ extern int leftDir;
 extern int rightDir;
 
 extern bool obstacleAvoidEnabled;
+extern bool gyroControlEnabled;
 
 #endif

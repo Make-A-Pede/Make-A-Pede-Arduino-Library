@@ -30,6 +30,8 @@ Madgwick filter;
 unsigned long microsPerReading;
 float heading;
 bool headingUpdated = false;
+int goalHeading;
+int goalSpeed;
 #endif
 #endif
 
@@ -56,6 +58,7 @@ int usTrigPin = 0;
 int usEchoPin = 0;
 
 bool obstacleAvoidEnabled = false;
+bool gyroControlEnabled = false;
 
 static constexpr size_t HeadingCharacteristicSize = sizeof(float);
 
@@ -137,39 +140,48 @@ void processCommand(char command[]) {
   p = strtok(NULL, ":");
   angle = atoi(p);
 
-  angle = (angle * ((2.0*PI)/360.0));
+#if defined(USE_IMU) && defined(__arc__)
+  if(gyroControlEnabled) {
+    goalSpeed = radius * (255.0/100.0);
+    goalHeading = angle;
 
-  int x = radius * cos(angle);
-  int y = radius * sin(angle);
+    if(goalHeading < 90) {
+      goalHeading += 270;
+    } else {
+      goalHeading -= 90;
+    }
+  } else {
+#endif
+    angle = (angle * ((2.0*PI)/360.0));
 
-  leftSpeed = (y + x)*(255.0/100.0);
-  rightSpeed = (y - x)*(255.0/100.0);
+    int x = radius * cos(angle);
+    int y = radius * sin(angle);
 
-  leftDir = sign(leftSpeed) == 1 ? LOW : HIGH;
-  rightDir = sign(rightSpeed) == 1 ? LOW : HIGH;
+    leftSpeed = (y + x)*(255.0/100.0);
+    rightSpeed = (y - x)*(255.0/100.0);
 
-  leftSpeed = abs(leftSpeed);
-  rightSpeed = abs(rightSpeed);
+    leftDir = sign(leftSpeed) == 1 ? LOW : HIGH;
+    rightDir = sign(rightSpeed) == 1 ? LOW : HIGH;
 
-  leftSpeed = min(255, leftSpeed);
-  leftSpeed = max(0, leftSpeed);
+    leftSpeed = abs(leftSpeed);
+    rightSpeed = abs(rightSpeed);
 
-  rightSpeed = min(255, rightSpeed);
-  rightSpeed = max(0, rightSpeed);
+    if(sign(y) == -1) {
+      int temp = leftSpeed;
+      leftSpeed = rightSpeed;
+      rightSpeed = temp;
+    }
 
-  if(sign(y) == -1) {
-    int temp = leftSpeed;
-    leftSpeed = rightSpeed;
-    rightSpeed = temp;
+    if(rightDir != leftDir) {
+      if(sign(x) > 0) {
+  			rightSpeed = 0;
+  		} else {
+  			leftSpeed = 0;
+  		}
+    }
+#if defined(USE_IMU) && defined(__arc__)
   }
-
-  if(rightDir != leftDir) {
-    if(sign(x) > 0) {
-			rightSpeed = 0;
-		} else {
-			leftSpeed = 0;
-		}
-  }
+#endif
 }
 
 /**
@@ -210,6 +222,39 @@ void bluetoothControl() {
         headingCharacteristic.writeValue(
             reinterpret_cast<unsigned char *>(buffer),
             HeadingCharacteristicSize);
+
+        if (gyroControlEnabled) {
+          float error, error1, error2, value, correctedHeading;
+
+          if(heading < 180) {
+            correctedHeading = heading + 180;
+          } else {
+            correctedHeading = heading - 180;
+          }
+
+          error1 = (goalHeading + 360) - correctedHeading;
+          error2 = goalHeading - correctedHeading;
+
+          if(abs(error1) < abs(error2)) {
+            error = error1;
+          } else {
+            error = error2;
+          }
+
+          //Serial.println(goalHeading);
+          //Serial.println(correctedHeading);
+
+          if(abs(error) < 30) {
+            value = Kp*error;
+          } else {
+            value = Kp2*error;
+          }
+          leftSpeed = goalSpeed - value;
+          rightSpeed = goalSpeed + value;
+
+          leftDir = LOW;
+          rightDir = LOW;
+        }
 
         t2 = millis();
       }
@@ -346,6 +391,11 @@ void getHeading() {
 
   headingUpdated = true;
 }
+
+void enableGyroControl(bool enable) {
+  gyroControlEnabled = enable;
+}
+
 #endif
 
 #if defined(USE_DISPLAY)
