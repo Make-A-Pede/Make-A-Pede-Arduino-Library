@@ -11,11 +11,13 @@
 #######################################
 
 setupMaP	KEYWORD2
+setupRGB	KEYWORD2
 bluetoothControl	KEYWORD2
 setLeftSpeed	KEYWORD2
 setRightSpeed	KEYWORD2
 setLeftDirection	KEYWORD2
 setRightDirection	KEYWORD2
+setRGBColor	KEYWORD2
 getLeftAntennae	KEYWORD2
 getRightAntennae	KEYWORD2
 enableObstacleAvoid	KEYWORD2

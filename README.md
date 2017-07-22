@@ -20,5 +20,11 @@ Simple autonomous program that avoids obstacles using the antennae.
 ### PIRDemo
 Autonomous program that will make the Make-A-Pede start driving around when it detects motion.
 
+### SoundDemo
+Autonomous program that will make the Make-A-Pede start driving around when it detects sound.
+
+### StatusLEDDemo
+Program that will cycle an RGB status LED through its available colors.
+
 # Documentation
 See the [wiki](https://github.com/Automata-Development/Make-A-Pede/wiki) for complete documentation.
