@@ -48,6 +48,15 @@
 
 #define sign(i) (i < 0 ? -1 : 1)
 
+#define OFF 0
+#define RED 1
+#define YELLOW 2
+#define GREEN 3
+#define CYAN 4
+#define BLUE 5
+#define MAGENTA 6
+#define WHITE 7
+
 extern int lSpeedPin;
 extern int lDirPin;
 
@@ -73,7 +82,7 @@ void setRightSpeed(int s);
 void setLeftDirection(int dir);
 void setRightDirection(int dir);
 
-void setRGBColor(int color = 0);
+void setRGBColor(int color);
 
 int getLeftAntennae();
 int getRightAntennae();
