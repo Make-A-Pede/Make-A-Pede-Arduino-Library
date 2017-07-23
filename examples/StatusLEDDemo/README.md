@@ -44,13 +44,17 @@ Load StatusLEDDemo.ino onto your Arduino. Turn on the Make-A-Pede and trigger on
 ## Programming
 There are two commands available in the Make-A-Pede library to control the LED:
 
-###`setupRGB(redPin, greenPin, bluePin);`
+`setupRGB(redPin, greenPin, bluePin);`
 
 setupRGB is used to set which pins will be used to control the LED. Default values are 8, 9, and 10.
 
-###`setRGBColor(color);`
+`setRGBColor(color);`
 
 setRGBColor is used to set the LED to a specific color. Valid inputs are:
+
+OFF, RED, YELLOW, GREEN, CYAN, BLUE, MAGENTA, WHITE
+
+OR
 
 0 - Off<br>
 1 - Red<br>
@@ -60,6 +64,3 @@ setRGBColor is used to set the LED to a specific color. Valid inputs are:
 5 - Blue<br>
 6 - Magenta<br>
 7 - White
-
-The default value is 0.
-
