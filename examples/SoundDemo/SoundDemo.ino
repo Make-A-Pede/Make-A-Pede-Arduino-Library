@@ -1,5 +1,5 @@
 /**
- * PIRDemo.ino - Software library for the Make-A-Pede (makeapede.com)
+ * SoundDemo.ino - Software library for the Make-A-Pede (makeapede.com)
  * Copyright (C) 2017 Automata-Development
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,10 +20,12 @@
 
 #define OBSTACLE_LEFT (getLeftAntennae() == HIGH)
 #define OBSTACLE_RIGHT (getRightAntennae() == HIGH)
-#define MOTION (digitalRead(pirPin) == HIGH)
+#define SOUND_LEVEL (analogRead(soundPinA)) // Read analog sound sensor output
+// #define SOUND_DETECTED (digitalRead(soundPinD)) // Read digital sound sensor output
 
 // Define Sensor Pins
-int pirPin = 2;
+int soundPinA = A5; // Analog output pin
+// int soundPinD = 3; // Digital output pin
 
 int leftSpeedPin = 5;
 int leftDirPin = 4;
@@ -34,12 +36,17 @@ int rightDirPin = 7;
 int leftAntennaePin = 12;
 int rightAntennaePin = 13;
 
+// Define sound sensor threshold levels
+int sensorOffset;
+int threshold = 3;
+
 void setup() {
   setupMaP(leftSpeedPin, leftDirPin, rightSpeedPin, rightDirPin, leftAntennaePin, rightAntennaePin);
+ 
+  // Initialize the sound sensor pins as inputs
+  pinMode(soundPinA, INPUT);
+  // pinMode(soundPinD, INPUT);
   
-  // Initialize the PIR sensor pin as an input
-  pinMode(pirPin, INPUT);
-
   // Initialize the serial connection
   Serial.begin(9600);
   
@@ -47,18 +54,33 @@ void setup() {
   Serial.println("Press either antenna to start program");
   while (!OBSTACLE_LEFT && !OBSTACLE_RIGHT);
 
+  // Calibrate the sound sensor based on the current room noise level
+  Serial.println("Calibrating sound sensor");
+  sensorOffset = SOUND_LEVEL;
+
   delay(2000);
 }
 
 void loop() {
-  if (MOTION) { // If the PIR sensor detects motion
-    // Run an obstacle avoidance cycle
-    obstacleAvoidCycle();
-    
-    // Wait for 2 seconds before checking the PIR sensor again
-    delay(2000);
+  // Read the sound sensor
+  int sound = abs(SOUND_LEVEL - sensorOffset);
+  
+  // Print the value of the sound sensor to the serial monitor - this can be used to tune the threshold value
+  Serial.println(sound);
+  
+  if (sound > threshold) { // If the sound sensor detects a sound outside of the expected range
+    // Run 3 obstacle avoidance cycles
+    for (int i=0; i<3; i++) {
+      Serial.print("Cycle: ");
+      Serial.println(i+1);
+      obstacleAvoidCycle();
+    }
+
+    // Wait for 1 second before checking the sound sensor again
+    delay(1000);
   }
-  delay(100);
+
+  delay(1);
 }
 
 void userCode() {}
@@ -113,3 +135,4 @@ void obstacleAvoidCycle() {
 
     delay(250);
 }
+

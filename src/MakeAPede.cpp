@@ -55,6 +55,10 @@ int rightDir = 0;
 int usTrigPin = 0;
 int usEchoPin = 0;
 
+int redPin = 8;
+int greenPin = 9;
+int bluePin = 10;
+
 bool obstacleAvoidEnabled = false;
 
 static constexpr size_t HeadingCharacteristicSize = sizeof(float);
@@ -122,6 +126,26 @@ void setupMaP(int lsp, int ldp, int rsp, int rdp, int lap, int rap) {
   setupDisplay();
   showEyes();
 #endif
+}
+
+/**
+ * Configures RGB status LED
+ *
+ * Should be called in setup()
+ */
+void setupRGB(int rp, int gp, int bp) {
+  redPin = rp;
+  greenPin = gp;
+  bluePin = bp;
+
+  pinMode(redPin, OUTPUT);
+  pinMode(greenPin, OUTPUT);
+  pinMode(bluePin, OUTPUT);
+
+  // Set LED to green once setup is complete
+  digitalWrite(redPin, LOW);
+  digitalWrite(greenPin, HIGH);
+  digitalWrite(bluePin, LOW);
 }
 
 void processCommand(char command[]) {
@@ -298,6 +322,55 @@ void setLeftDirection(int dir) { digitalWrite(lDirPin, dir); }
  * (backwards))
  */
 void setRightDirection(int dir) { digitalWrite(rDirPin, dir); }
+
+/**
+ * Sets the color of the RGB status LED
+ * 0-7 = off, red, yellow, green, cyan, blue, magenta, white
+ */
+void setRGBColor(int color) {
+  switch (color) {
+    case 1: // red
+      digitalWrite(redPin, HIGH);
+      digitalWrite(greenPin, LOW);
+      digitalWrite(bluePin, LOW);
+      break;
+    case 2: // yellow
+      digitalWrite(redPin, HIGH);
+      digitalWrite(greenPin, HIGH);
+      digitalWrite(bluePin, LOW);
+      break;
+    case 3: // green
+      digitalWrite(redPin, LOW);
+      digitalWrite(greenPin, HIGH);
+      digitalWrite(bluePin, LOW);
+      break;
+    case 4: // cyan
+      digitalWrite(redPin, LOW);
+      digitalWrite(greenPin, HIGH);
+      digitalWrite(bluePin, HIGH);
+      break;
+    case 5: // blue
+      digitalWrite(redPin, LOW);
+      digitalWrite(greenPin, LOW);
+      digitalWrite(bluePin, HIGH);
+      break;
+    case 6: // magenta
+      digitalWrite(redPin, HIGH);
+      digitalWrite(greenPin, LOW);
+      digitalWrite(bluePin, HIGH);
+      break;
+    case 7: // white
+      digitalWrite(redPin, HIGH);
+      digitalWrite(greenPin, HIGH);
+      digitalWrite(bluePin, HIGH);
+      break;
+    default: // off
+      digitalWrite(redPin, LOW);
+      digitalWrite(greenPin, LOW);
+      digitalWrite(bluePin, LOW);
+      break;
+  }
+}
 
 int getLeftAntennae() { return digitalRead(lAntennaePin); }
 
