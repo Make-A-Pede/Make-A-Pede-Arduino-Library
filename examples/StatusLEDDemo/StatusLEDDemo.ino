@@ -18,9 +18,6 @@
 
 #include "MakeAPede.h"
 
-#define OBSTACLE_LEFT (getLeftAntennae() == HIGH)
-#define OBSTACLE_RIGHT (getRightAntennae() == HIGH)
-
 // Define Sensor Pins
 int leftSpeedPin = 5;
 int leftDirPin = 4;
@@ -29,25 +26,13 @@ int rightDirPin = 7;
 int leftAntennaePin = 12;
 int rightAntennaePin = 13;
 
-int red = 8;
-int green = 9;
-int blue = 10;
+int redPin = 8;
+int greenPin = 9;
+int bluePin = 10;
 
 void setup() {
   setupMaP(leftSpeedPin, leftDirPin, rightSpeedPin, rightDirPin, leftAntennaePin, rightAntennaePin);
-  setupRGB(red, green, blue);
-
-  // Initialize the serial connection
-  Serial.begin(9600);
-  
-  // Wait for an antenna to be triggered to start the program
-  Serial.println("Press either antenna to start program");
-  while (!OBSTACLE_LEFT && !OBSTACLE_RIGHT);
-
-  // Turn off the status LED
-  setRGBColor();
-
-  delay(2000);
+  setupRGB(redPin, greenPin, bluePin);
 }
 
 void loop() {
