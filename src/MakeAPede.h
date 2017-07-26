@@ -110,6 +110,7 @@ extern float heading;
 #if defined(USE_DISPLAY)
 void setupDisplay();
 void showEyes();
+void showClosedEyes();
 
 extern Adafruit_SSD1306 displayRight;
 extern Adafruit_SSD1306 displayLeft;

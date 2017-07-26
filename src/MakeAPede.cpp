@@ -463,4 +463,38 @@ void showEyes() {
 
   displayLeft.display();
 }
+
+void showClosedEyes() {
+  displayRight.clearDisplay();
+
+  displayRight.drawLine(40, 7, displayRight.width() - 40, 3, WHITE);
+
+  displayRight.drawRoundRect(displayRight.width() / 2 - OUTER_EYE_WIDTH / 2,
+                             displayRight.height() - OUTER_EYE_HEIGHT - 1,
+                             OUTER_EYE_WIDTH, OUTER_EYE_HEIGHT,
+                             OUTER_EYE_HEIGHT / 2 + 2, WHITE);
+
+  displayRight.drawLine(displayRight.width() / 2 - INNER_EYE_WIDTH / 2 - 4,
+                        displayRight.height() - INNER_EYE_HEIGHT / 2 - 1,
+                        displayRight.width() / 2 + INNER_EYE_WIDTH / 2 + 4,
+                        displayRight.height() - INNER_EYE_HEIGHT / 2 - 1, WHITE);
+
+  displayRight.display();
+
+  displayLeft.clearDisplay();
+
+  displayLeft.drawLine(40, 3, displayLeft.width() - 40, 7, WHITE);
+
+  displayLeft.drawRoundRect(displayLeft.width() / 2 - OUTER_EYE_WIDTH / 2,
+                            displayLeft.height() - OUTER_EYE_HEIGHT - 1,
+                            OUTER_EYE_WIDTH, OUTER_EYE_HEIGHT,
+                            OUTER_EYE_HEIGHT / 2 + 2, WHITE);
+
+  displayLeft.drawLine(displayLeft.width() / 2 - INNER_EYE_WIDTH / 2 - 4,
+                       displayLeft.height() - INNER_EYE_HEIGHT / 2 - 1,
+                       displayLeft.width() / 2 + INNER_EYE_WIDTH / 2 + 4,
+                       displayLeft.height() - INNER_EYE_HEIGHT / 2 - 1, WHITE);
+
+  displayLeft.display();
+}
 #endif
