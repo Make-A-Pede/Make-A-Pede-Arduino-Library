@@ -25,6 +25,8 @@ userCode	KEYWORD2
 getHeading	KEYWORD2
 setupDisplay	KEYWORD2
 showEyes	KEYWORD2
+showClosedEyes	KEYWORD2
+
 
 #######################################
 # Instances (KEYWORD2)

@@ -14,6 +14,9 @@ Open the remote control example program by clicking File->Examples->Make-A-Pede-
 ### RemoteControl
 Simple remote program using smartphone Bluetooth control.
 
+### RemoteControlOLED
+Remote program using smartphone Bluetooth control and OLED eyes.
+
 ### ObstacleAvoidAutonomous
 Simple autonomous program that avoids obstacles using the antennae.
 
