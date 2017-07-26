@@ -48,14 +48,14 @@
 
 #define sign(i) (i < 0 ? -1 : 1)
 
-#define OFF 0
-#define RED 1
-#define YELLOW 2
-#define GREEN 3
-#define CYAN 4
-#define BLUE 5
-#define MAGENTA 6
-#define WHITE 7
+#define LED_OFF 0
+#define LED_RED 1
+#define LED_YELLOW 2
+#define LED_GREEN 3
+#define LED_CYAN 4
+#define LED_BLUE 5
+#define LED_MAGENTA 6
+#define LED_WHITE 7
 
 extern int lSpeedPin;
 extern int lDirPin;

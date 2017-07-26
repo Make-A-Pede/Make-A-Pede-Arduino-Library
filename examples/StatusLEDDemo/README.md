@@ -52,7 +52,7 @@ setupRGB is used to set which pins will be used to control the LED. Default valu
 
 setRGBColor is used to set the LED to a specific color. Valid inputs are:
 
-OFF, RED, YELLOW, GREEN, CYAN, BLUE, MAGENTA, WHITE
+`LED_OFF, LED_RED, LED_YELLOW, LED_GREEN, LED_CYAN, LED_BLUE, LED_MAGENTA, LED_WHITE`
 
 OR
 
