@@ -22,18 +22,7 @@
 #include "Arduino.h"
 #include <limits.h>
 
-//#define USE_IMU
 //#define USE_DISPLAY
-
-#if defined (__arc__)
-#include <CurieBLE.h>
-
-#if defined(USE_IMU)
-#include <CurieTimerOne.h>
-#include <CurieIMU.h>
-#include <MadgwickAHRS.h>
-#endif
-#endif
 
 #if defined(USE_DISPLAY)
 #include <Wire.h>
@@ -66,11 +55,11 @@ extern int rDirPin;
 extern int lAntennaePin;
 extern int rAntennaePin;
 
-void setupMaP(int lsp = 5, int ldp = 4, int rsp = 6, int rdp = 7, int lap = 12, int rap = 13);
-
 extern int redPin;
 extern int greenPin;
 extern int bluePin;
+
+void setupMaP(int lsp = 5, int ldp = 4, int rsp = 6, int rdp = 7, int lap = 12, int rap = 13);
 
 void setupRGB(int rp = 8, int gp = 9, int bp = 10);
 
@@ -90,22 +79,6 @@ int getRightAntennae();
 void enableObstacleAvoid(bool enable);
 
 void userCode();
-
-#if defined (__arc__)
-extern BLEPeripheral blePeripheral;
-extern BLEService mapService;
-extern BLECharacteristic driveCharacteristic;
-
-#if defined(USE_IMU)
-extern BLECharacteristic headingCharacteristic;
-
-void getHeading();
-
-extern Madgwick filter;
-extern unsigned long microsPerReading;
-extern float heading;
-#endif
-#endif
 
 #if defined(USE_DISPLAY)
 void setupDisplay();
