@@ -72,7 +72,7 @@ extern int redPin;
 extern int greenPin;
 extern int bluePin;
 
-void setupRGB(int rp = 8, int gp = 9, int bp = 10);
+void setupRGB(int rp = 9, int gp = 10, int bp = 11);
 
 void bluetoothControl();
 

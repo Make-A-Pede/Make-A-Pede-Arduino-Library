@@ -55,9 +55,9 @@ int rightDir = 0;
 int usTrigPin = 0;
 int usEchoPin = 0;
 
-int redPin = 8;
-int greenPin = 9;
-int bluePin = 10;
+int redPin = 9;
+int greenPin = 10;
+int bluePin = 11;
 
 bool obstacleAvoidEnabled = false;
 
