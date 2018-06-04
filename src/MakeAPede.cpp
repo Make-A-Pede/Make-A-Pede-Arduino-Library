@@ -326,43 +326,86 @@ void setRightDirection(int dir) { digitalWrite(rDirPin, dir); }
 /**
  * Sets the color of the RGB status LED
  * 0-7 = off, red, yellow, green, cyan, blue, magenta, white
+ * set brightness = -1 if not using PWM pins
  */
-void setRGBColor(int color) {
+void setRGBColor(int color, int brightness) {
   switch (color) {
     case 1: // red
-      digitalWrite(redPin, HIGH);
-      digitalWrite(greenPin, LOW);
-      digitalWrite(bluePin, LOW);
+      if(brightness == -1) {
+        digitalWrite(redPin, HIGH);
+        digitalWrite(greenPin, LOW);
+        digitalWrite(bluePin, LOW);
+      } else {
+        analogWrite(redPin, brightness);
+        analogWrite(greenPin, 0);
+        analogWrite(bluePin, 0);
+      }
       break;
     case 2: // yellow
-      digitalWrite(redPin, HIGH);
-      digitalWrite(greenPin, HIGH);
-      digitalWrite(bluePin, LOW);
+      if(brightness == -1) {
+        digitalWrite(redPin, HIGH);
+        digitalWrite(greenPin, HIGH);
+        digitalWrite(bluePin, LOW);
+      } else {
+        analogWrite(redPin, brightness);
+        analogWrite(greenPin, brightness);
+        analogWrite(bluePin, 0);
+      }
       break;
     case 3: // green
-      digitalWrite(redPin, LOW);
-      digitalWrite(greenPin, HIGH);
-      digitalWrite(bluePin, LOW);
+      if(brightness == -1) {
+        digitalWrite(redPin, LOW);
+        digitalWrite(greenPin, HIGH);
+        digitalWrite(bluePin, LOW);
+      } else {
+        analogWrite(redPin, 0);
+        analogWrite(greenPin, brightness);
+        analogWrite(bluePin, 0);
+      }
       break;
     case 4: // cyan
-      digitalWrite(redPin, LOW);
-      digitalWrite(greenPin, HIGH);
-      digitalWrite(bluePin, HIGH);
+      if(brightness == -1) {
+        digitalWrite(redPin, LOW);
+        digitalWrite(greenPin, HIGH);
+        digitalWrite(bluePin, HIGH);
+      } else {
+        analogWrite(redPin, 0);
+        analogWrite(greenPin, brightness);
+        analogWrite(bluePin, brightness);
+      }
       break;
     case 5: // blue
-      digitalWrite(redPin, LOW);
-      digitalWrite(greenPin, LOW);
-      digitalWrite(bluePin, HIGH);
+      if(brightness == -1) {
+        digitalWrite(redPin, LOW);
+        digitalWrite(greenPin, LOW);
+        digitalWrite(bluePin, HIGH);
+      } else {
+        analogWrite(redPin, 0);
+        analogWrite(greenPin, 0);
+        analogWrite(bluePin, brightness);
+      }
       break;
     case 6: // magenta
-      digitalWrite(redPin, HIGH);
-      digitalWrite(greenPin, LOW);
-      digitalWrite(bluePin, HIGH);
+      if(brightness == -1) {
+        digitalWrite(redPin, HIGH);
+        digitalWrite(greenPin, LOW);
+        digitalWrite(bluePin, HIGH);
+      } else {
+        analogWrite(redPin, brightness);
+        analogWrite(greenPin, 0);
+        analogWrite(bluePin, brightness);
+      }
       break;
     case 7: // white
-      digitalWrite(redPin, HIGH);
-      digitalWrite(greenPin, HIGH);
-      digitalWrite(bluePin, HIGH);
+      if(brightness == -1) {
+        digitalWrite(redPin, HIGH);
+        digitalWrite(greenPin, HIGH);
+        digitalWrite(bluePin, HIGH);
+      } else {
+        analogWrite(redPin, brightness);
+        analogWrite(greenPin, brightness);
+        analogWrite(bluePin, brightness);
+      }
       break;
     default: // off
       digitalWrite(redPin, LOW);

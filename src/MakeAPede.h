@@ -82,7 +82,7 @@ void setRightSpeed(int s);
 void setLeftDirection(int dir);
 void setRightDirection(int dir);
 
-void setRGBColor(int color);
+void setRGBColor(int color, int brightness = -1);
 
 int getLeftAntennae();
 int getRightAntennae();
