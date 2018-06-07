@@ -60,8 +60,7 @@ extern int greenPin;
 extern int bluePin;
 
 void setupMaP(int lsp = 5, int ldp = 4, int rsp = 6, int rdp = 7, int lap = 12, int rap = 13);
-
-void setupRGB(int rp = 8, int gp = 9, int bp = 10);
+void setupRGB(int rp = 9, int gp = 10, int bp = 11);
 
 void bluetoothControl();
 
@@ -71,7 +70,7 @@ void setRightSpeed(int s);
 void setLeftDirection(int dir);
 void setRightDirection(int dir);
 
-void setRGBColor(int color);
+void setRGBColor(int color, int brightness = -1);
 
 int getLeftAntennae();
 int getRightAntennae();
