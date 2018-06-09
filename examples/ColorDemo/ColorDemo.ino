@@ -32,12 +32,14 @@ const uint8_t blueLEDPin = 11;
 const uint8_t ldrPin = A0;
 
 // Calibration settings
-const uint8_t avgCount = 10; // Number of values to use for reading averaging
+const uint8_t avgCount = 5; // Number of values to use for averaging
 const uint8_t sensorTiming = 20; // Duration of LED pulses in ms
-const uint8_t redBrightness = 20; // LED pulse brightness
-const uint8_t greenBrightness = 50;
-const uint8_t blueBrightness = 100;
-const uint8_t detectionThreshold = 10; // Required difference from other colors to detect as a color
+const int whiteThreshold = 500; // Target brightness for automatic calibration
+const int blackThreshold = 200; // Brightness cutoff for checking color
+const uint8_t detectionThreshold = 80; // Threshold to select color
+int redBrightness; // LED pulse brightness (will be automatically adjusted)
+int greenBrightness;
+int blueBrightness;
 
 // Variables to store measured data
 int redVal;
@@ -50,12 +52,9 @@ int blueValArray[avgCount];
 int avgBrightnessArray[avgCount];
 
 // Variables to store calculated color values
-int colorRed;
-int colorGreen;
-int colorBlue;
-int colorYellow;
-int colorCyan;
-int colorMagenta;
+int yellowVal;
+int cyanVal;
+int magentaVal;
 
 void setup() {
   Serial.begin(9600);
@@ -64,6 +63,49 @@ void setup() {
   setupRGB(redLEDPin, greenLEDPin, blueLEDPin);
   
   pinMode(ldrPin, INPUT_PULLUP); //Enable the internal pullup on the light sensor pin
+
+  /*
+   * Sensor Calibration
+   */
+  redBrightness = 0;
+  greenBrightness = 0;
+  blueBrightness = 0;
+  
+  while(redVal < whiteThreshold){
+    // Increase brightness
+    redBrightness += 5;
+    
+    // Measure red value
+    setRGBColor(LED_RED, redBrightness);
+    delay(sensorTiming);
+    redVal = 1024 - analogRead(ldrPin);
+  }
+  setRGBColor(LED_OFF);
+  delay(sensorTiming);
+
+  while(greenVal < whiteThreshold){
+    // Increase brightness
+    greenBrightness += 5;
+    
+    // Measure green value
+    setRGBColor(LED_GREEN, greenBrightness);
+    delay(sensorTiming);
+    greenVal = 1024 - analogRead(ldrPin);
+  }
+  setRGBColor(LED_OFF);
+  delay(sensorTiming);
+
+  while(blueVal < whiteThreshold){
+    // Increase brightness
+    blueBrightness += 5;
+    
+    // Measure blue value
+    setRGBColor(LED_BLUE, blueBrightness);
+    delay(sensorTiming);
+    blueVal = 1024 - analogRead(ldrPin);
+  }
+  setRGBColor(LED_OFF);
+  delay(sensorTiming);
 }
 
 void loop() {   
@@ -74,16 +116,22 @@ void loop() {
   setRGBColor(LED_RED, redBrightness);
   delay(sensorTiming);
   redVal = analogRead(ldrPin);
+  setRGBColor(LED_OFF);
+  delay(sensorTiming);
 
   // Measure green value
   setRGBColor(LED_GREEN, greenBrightness);
   delay(sensorTiming);
   greenVal = analogRead(ldrPin);
+  setRGBColor(LED_OFF);
+  delay(sensorTiming);
 
   // Measure blue value
   setRGBColor(LED_BLUE, blueBrightness);
   delay(sensorTiming);
   blueVal = analogRead(ldrPin);
+  setRGBColor(LED_OFF);
+  delay(sensorTiming);
 
   // Compute the average brightness of red, green, and blue
   avgBrightness = (redVal+greenVal+blueVal)/3;
@@ -91,7 +139,7 @@ void loop() {
   /*
    * Filter Data
    */
-  // Average last 10 values
+  // Average last values
   int i;
   for (i = 0; i < (avgCount-1); i++) {
     redValArray[i] = redValArray[i+1];
@@ -121,40 +169,55 @@ void loop() {
   greenVal = 1024-(greenValSum/avgCount);
   blueVal = 1024-(blueValSum/avgCount);
   avgBrightness = 1024-(avgValSum/avgCount);
+
+  // Shift values based on average brightness
+  redVal = redVal - avgBrightness;
+  greenVal = greenVal - avgBrightness;
+  blueVal = blueVal - avgBrightness;
   
+  // Scale values based on average peak deviation
+  float scale = 100.0/((abs(redVal) + abs(blueVal) + abs(greenVal))/3);
+  redVal = redVal*scale;
+  greenVal = greenVal*scale;
+  blueVal = blueVal*scale;
+
+  // Compute additional colors
+  yellowVal = (redVal + greenVal)/1.5;
+
   /*
-   * Determine Result
+   * Determine color
    */
-   colorRed = redVal -greenVal -blueVal;
-   colorGreen = -redVal +greenVal -blueVal;
-   colorBlue = -redVal -greenVal +blueVal;
-   colorYellow = (0.5*redVal) +(0.5*greenVal) -blueVal;
-   colorCyan = -redVal +(0.5*greenVal) +(0.5*blueVal);
-   colorMagenta = (0.5*redVal) -greenVal +(0.5*blueVal);
+   int detectedColor;
+   
+   if(avgBrightness < blackThreshold){
+    detectedColor = 0;
+   }
+   else if(yellowVal > detectionThreshold){
+    detectedColor = 4;
+   }
+   else if(redVal > detectionThreshold){
+    detectedColor = 1;
+   }
+   else if(blueVal > detectionThreshold){
+    detectedColor = 3;
+   }
+   else if(greenVal > detectionThreshold){
+    detectedColor = 2;
+   }
   
   /*
    * Plot
    */
   // Plot on serial plotter
-  /*Serial.print(blueVal); // Blue line - blue value
+  Serial.print(blueVal); // Blue
   Serial.print(",");
-  Serial.print(redVal); // Red line - red value
+  Serial.print(redVal); // Red
   Serial.print(",");
-  Serial.print(greenVal); // Green line - green value
+  Serial.print(greenVal); // Green
   Serial.print(",");
-  Serial.print(avgBrightness); // Orange line - brightness
+  Serial.print(yellowVal); // Orange
   Serial.print(",");
-  Serial.println(selectedColor*100); // Purple line - selected color*/
-
-  Serial.print(colorBlue); // Blue
+  Serial.print(avgBrightness); // Purple
   Serial.print(",");
-  Serial.print(colorRed); // Red
-  Serial.print(",");
-  Serial.print(colorGreen); // Green
-  Serial.print(",");
-  Serial.print(colorYellow); // Orange
-  Serial.print(",");
-  Serial.print(colorMagenta); // Purple
-  Serial.print(",");
-  Serial.println(colorCyan); // Cyan?
+  Serial.println(detectedColor * 20); // Grey
 }
