@@ -18,6 +18,9 @@
 
 #include "MakeAPede.h"
 
+//#define OBSTACLE_LEFT (getLeftAntennae() == HIGH)
+//#define OBSTACLE_RIGHT (getRightAntennae() == HIGH)
+
 // Define Sensor Pins
 const uint8_t leftSpeedPin = 5;
 const uint8_t leftDirPin = 4;
@@ -26,45 +29,78 @@ const uint8_t rightDirPin = 7;
 const uint8_t leftAntennaePin = 12;
 const uint8_t rightAntennaePin = 13;
 
-const uint8_t redLEDPin = 9;
-const uint8_t greenLEDPin = 10;
-const uint8_t blueLEDPin = 11;
 const uint8_t rangefinderPin = A1;
 
 // Calibration settings
-// Sensor readings for 7, 9, and 11 inches
-int a7in = 132; //7 in
-int a9in = 102; //9 in
-int a11in = 75; //11 in
+// Conversion from sensor reading (x) to distance (y): y = kM * x^kP
+// Values found using Excel to record sensor output from serial monitor and plot a trendline
+const float kM = 1109.2;
+const float kP = -1.061;
+
+// Variable to store sensor reading
+float distance;
 
 void setup() {
+  // Initialize the serial connection
   Serial.begin(9600);
 
   setupMaP(leftSpeedPin, leftDirPin, rightSpeedPin, rightDirPin, leftAntennaePin, rightAntennaePin);
-  setupRGB(redLEDPin, greenLEDPin, blueLEDPin);
-  
   pinMode(rangefinderPin, INPUT);
+
+  // Wait for an antenna to be triggered to start the program
+  //Serial.println("Press either antenna to start program");
+  //while (!OBSTACLE_LEFT && !OBSTACLE_RIGHT);
+
+  delay(2000);
+
+  distance = convertToInches(analogRead(rangefinderPin));
 }
 
 void loop() {
-  //Read the input on analog pin 0
-  int distance = analogRead(rangefinderPin);
+  // Set the motors to run forwards
+  setLeftDirection(LOW);
+  setRightDirection(LOW);
   
-  //Print the distance to the serial monitor
-  Serial.println(distance);
+  // Run the motors at 160 power
+  setLeftSpeed(160);
+  setRightSpeed(160);
   
-  //Check if the distance reading is less than 7 inches
-  if(distance > a7in)
-  {setRGBColor(LED_RED);}
-  //Check if the distance reading is between 7 and 9 inches
-  else if(distance < a7in && distance > a9in)
-  {setRGBColor(LED_BLUE);}
-  //Check if the distance reading is between 9 and 11 inches
-  else if(distance < a9in && distance > a11in)
-  {setRGBColor(LED_GREEN);}
-  //If neither of the previous two conditions is met, the distance is out of range
-  else
-  {setRGBColor(LED_OFF);}
+  // Wait for an obstacle to be < 8" away
+  while (distance > 8){
+    //Read the sensor and convert to inches
+    distance = convertToInches(analogRead(rangefinderPin));
+    
+    //Print the distance to the serial monitor
+    Serial.println(distance);
+  }
+  
+  // Turn left
+  setLeftSpeed(0);
+  setRightSpeed(160);
+     
+  // Wait for obstacle to be > 8" away
+  int loopCounter = 0;
+  while (distance < 8){
+    //Read the sensor and convert to inches
+    distance = convertToInches(analogRead(rangefinderPin));
+    
+    //Print the distance to the serial monitor
+    Serial.println(distance);
 
-  delay(100);    //Wait
+    if(loopCounter > 50) {
+      setLeftDirection(HIGH);
+      setRightDirection(HIGH);
+    }
+
+    loopCounter++;
+    delay(10);
+  }
+  
+  // Wait 0.5 seconds
+  delay(1000);
 }
+
+float convertToInches (int sensorReading) {
+  return (kM * (pow(sensorReading, kP)));
+}
+

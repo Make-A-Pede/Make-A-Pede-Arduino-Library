@@ -35,9 +35,5 @@ Autonomous program that will make the Make-A-Pede start driving around when it d
 ### ColorDemo
 Program to demonstrate a color sensor built using an RGB LED and an LDR
 
-- ColorDemoManual.ino - Manually calibrate LED brightness using the serial console.
-- ColorDemoAutoCal.ino - Automatically calibrate LED brightness by placing a white card in front of the sensor.
-- ColorDemoLiveCal.ino - Automatically calibrate sensor range using average sensor brightness. Requires a calibrated LED.
-
 # Documentation
 See the [wiki](https://github.com/Automata-Development/Make-A-Pede/wiki) for complete documentation.
