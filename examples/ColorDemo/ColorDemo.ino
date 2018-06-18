@@ -34,9 +34,10 @@ const uint8_t ldrPin = A0;
 // Calibration settings
 const uint8_t avgCount = 5; // Number of values to use for averaging
 const uint8_t sensorTiming = 20; // Duration of LED pulses in ms
-const int whiteThreshold = 500; // Target brightness for automatic calibration
-const int blackThreshold = 200; // Brightness cutoff for checking color
+int whiteThreshold = 500; // Target brightness for automatic calibration
+int blackThreshold = 200; // Brightness cutoff for checking color
 const uint8_t detectionThreshold = 80; // Threshold to select color
+int ambientBrightness;
 int redBrightness; // LED pulse brightness (will be automatically adjusted)
 int greenBrightness;
 int blueBrightness;
@@ -67,6 +68,10 @@ void setup() {
   /*
    * Sensor Calibration
    */
+  ambientBrightness = 1024 - analogRead(ldrPin);
+  blackThreshold = ambientBrightness - 200;
+  whiteThreshold = ambientBrightness + 30;
+   
   redBrightness = 0;
   greenBrightness = 0;
   blueBrightness = 0;
@@ -79,6 +84,8 @@ void setup() {
     setRGBColor(LED_RED, redBrightness);
     delay(sensorTiming);
     redVal = 1024 - analogRead(ldrPin);
+
+    if (redBrightness >= 255) break;
   }
   setRGBColor(LED_OFF);
   delay(sensorTiming);
@@ -91,6 +98,8 @@ void setup() {
     setRGBColor(LED_GREEN, greenBrightness);
     delay(sensorTiming);
     greenVal = 1024 - analogRead(ldrPin);
+
+    if (greenBrightness >= 255) break;
   }
   setRGBColor(LED_OFF);
   delay(sensorTiming);
@@ -103,6 +112,8 @@ void setup() {
     setRGBColor(LED_BLUE, blueBrightness);
     delay(sensorTiming);
     blueVal = 1024 - analogRead(ldrPin);
+
+    if (blueBrightness >= 255) break;
   }
   setRGBColor(LED_OFF);
   delay(sensorTiming);
@@ -112,6 +123,8 @@ void loop() {
   /*
    * Read Sensor
    */
+  ambientBrightness = 1024 - analogRead(ldrPin);
+   
   // Measure red value
   setRGBColor(LED_RED, redBrightness);
   delay(sensorTiming);
@@ -219,5 +232,7 @@ void loop() {
   Serial.print(",");
   Serial.print(avgBrightness); // Purple
   Serial.print(",");
-  Serial.println(detectedColor * 20); // Grey
+  Serial.print(detectedColor * 20); // Grey
+  Serial.print(",");
+  Serial.println(ambientBrightness);
 }
