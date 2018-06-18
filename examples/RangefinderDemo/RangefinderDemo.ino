@@ -32,13 +32,15 @@ const uint8_t rightAntennaePin = 13;
 const uint8_t rangefinderPin = A1;
 
 // Calibration settings
+const uint8_t avgCount = 10; // Number of values to use for averaging
 // Conversion from sensor reading (x) to distance (y): y = kM * x^kP
 // Values found using Excel to record sensor output from serial monitor and plot a trendline
 const float kM = 1109.2;
 const float kP = -1.061;
 
-// Variable to store sensor reading
+// Variable to store sensor readings
 float distance;
+float distanceArray[avgCount];
 
 void setup() {
   // Initialize the serial connection
@@ -61,9 +63,9 @@ void loop() {
   setLeftDirection(LOW);
   setRightDirection(LOW);
   
-  // Run the motors at 160 power
-  setLeftSpeed(160);
-  setRightSpeed(160);
+  // Run the motors forward
+  setLeftSpeed(180);
+  setRightSpeed(150);
   
   // Wait for an obstacle to be < 8" away
   while (distance > 8){
@@ -87,7 +89,11 @@ void loop() {
     //Print the distance to the serial monitor
     Serial.println(distance);
 
-    if(loopCounter > 50) {
+    // If object is too close or timeout has expired
+    if((loopCounter > 1000) || (distance < 2)) {
+      // Back up
+      setLeftSpeed(160);
+      setRightSpeed(160);
       setLeftDirection(HIGH);
       setRightDirection(HIGH);
     }
@@ -95,12 +101,33 @@ void loop() {
     loopCounter++;
     delay(10);
   }
-  
-  // Wait 0.5 seconds
-  delay(1000);
 }
 
+/*
+ * Convert sensor reading to inches and filter
+ */
 float convertToInches (int sensorReading) {
-  return (kM * (pow(sensorReading, kP)));
+  float result = kM * (pow(sensorReading, kP));
+
+  /*if (result > 12) {
+    result = 12;
+  }*/
+  
+  // Average last values
+  int i;
+  for (i = 0; i < (avgCount-1); i++) {
+    distanceArray[i] = distanceArray[i+1];
+  }
+
+  distanceArray[avgCount-1] = result;
+
+  result = 0;
+  for (i = 0; i < avgCount; i++) {
+    result += distanceArray[i];
+  }
+
+  result = result/avgCount;
+  
+  return result;
 }
 
