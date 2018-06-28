@@ -39,9 +39,10 @@ const uint8_t rangefinderPin = A1;
 // Calibration settings
 const uint8_t avgCount = 5; // Number of values to use for averaging
 const uint8_t sensorTiming = 20; // Duration of LED pulses in ms
-const int whiteThreshold = 500; // Target brightness for automatic calibration
-const int blackThreshold = 200; // Brightness cutoff for checking color
+int whiteThreshold = 500; // Target brightness for automatic calibration
+int blackThreshold = 200; // Brightness cutoff for checking color
 const uint8_t detectionThreshold = 80; // Threshold to select color
+int ambientBrightness;
 int redBrightness; // LED pulse brightness (will be automatically adjusted)
 int greenBrightness;
 int blueBrightness;
@@ -71,6 +72,8 @@ float distanceArray[avgCount];
 const int defaultSpeed = 150;
 int motorSpeed = defaultSpeed;
 
+uint8_t cycles = 0;
+
 void setup() {
   Serial.begin(9600);
 
@@ -83,6 +86,10 @@ void setup() {
   /*
    * Sensor Calibration
    */
+  ambientBrightness = 1024 - analogRead(ldrPin);
+  blackThreshold = ambientBrightness - 200;
+  whiteThreshold = ambientBrightness + 30;
+
   redBrightness = 0;
   greenBrightness = 0;
   blueBrightness = 0;
@@ -95,6 +102,8 @@ void setup() {
     setRGBColor(LED_RED, redBrightness);
     delay(sensorTiming);
     redVal = 1024 - analogRead(ldrPin);
+
+    if (redBrightness >= 255) break;
   }
   setRGBColor(LED_OFF);
   delay(sensorTiming);
@@ -107,6 +116,8 @@ void setup() {
     setRGBColor(LED_GREEN, greenBrightness);
     delay(sensorTiming);
     greenVal = 1024 - analogRead(ldrPin);
+
+    if (greenBrightness >= 255) break;
   }
   setRGBColor(LED_OFF);
   delay(sensorTiming);
@@ -119,6 +130,8 @@ void setup() {
     setRGBColor(LED_BLUE, blueBrightness);
     delay(sensorTiming);
     blueVal = 1024 - analogRead(ldrPin);
+
+    if (blueBrightness >= 255) break;
   }
   setRGBColor(LED_OFF);
   delay(sensorTiming);
@@ -142,27 +155,33 @@ void loop() {
     //Read the sensor and convert to inches
     distance = convertToInches(analogRead(rangefinderPin));
 
-    switch(getColor()){
-      case 0: // Black
-        // motorSpeed = defaultSpeed;
-        break;
-      case 1: // Red
-        motorSpeed = 0;
-        break;
-      case 2: // Green
-        motorSpeed = defaultSpeed + 100;
-        break;
-      case 3: // Blue
-        break;
-      case 4: // Yellow
-        break;
+    if (cycles > 9) {
+      switch(getColor()){
+        case 0: // Black
+          // motorSpeed = defaultSpeed;
+          break;
+        case 1: // Red
+          motorSpeed = 0;
+          break;
+        case 2: // Green
+          motorSpeed = defaultSpeed + 100;
+          break;
+        case 3: // Blue
+          break;
+        case 4: // Yellow
+          break;
+      }
+
+      cycles = 0;
     }
 
-    Serial.println(motorSpeed);
+    //Serial.println(motorSpeed);
 
     // Run the motors
     setLeftSpeed(motorSpeed+15);
     setRightSpeed(motorSpeed-15);
+
+    cycles++;
   }
 
   motorSpeed = defaultSpeed;
@@ -184,8 +203,9 @@ void loop() {
       setRightSpeed(motorSpeed);
       setLeftDirection(HIGH);
       setRightDirection(HIGH);
-    } else {
-      
+
+      delay(750);
+      break;
     }
 
     loopCounter++;
@@ -289,22 +309,6 @@ int getColor(){
    else if(greenVal > detectionThreshold){
     detectedColor = 2;
    }
-  
-  /*
-   * Plot
-   */
-  // Plot on serial plotter
-  /*Serial.print(blueVal); // Blue
-  Serial.print(",");
-  Serial.print(redVal); // Red
-  Serial.print(",");
-  Serial.print(greenVal); // Green
-  Serial.print(",");
-  Serial.print(yellowVal); // Orange
-  Serial.print(",");
-  Serial.print(avgBrightness); // Purple
-  Serial.print(",");
-  Serial.println(detectedColor * 20); // Grey*/
 
   return detectedColor;
 }
@@ -332,4 +336,3 @@ float convertToInches (int sensorReading) {
   
   return result;
 }
-
