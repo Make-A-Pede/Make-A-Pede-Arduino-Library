@@ -105,23 +105,18 @@ void setupRGB(int rp, int gp, int bp) {
 void processCommand(char command[]) {
   Serial.println(command);
 
-  int radius = 0;
-  float angle = 0;
+  int left = 0;
+  int right = 0;
 
   char *p;
   p = strtok(command, ":");
-  radius = atoi(p);
+  left = atoi(p);
 
   p = strtok(NULL, ":");
-  angle = atoi(p);
+  right = atoi(p);
 
-  angle = (angle * ((2.0 * PI) / 360.0));
-
-  int x = radius * cos(angle);
-  int y = radius * sin(angle);
-
-  leftSpeed = (y + x) * (255.0 / 100.0);
-  rightSpeed = (y - x) * (255.0 / 100.0);
+  leftSpeed = left - 255;
+  rightSpeed = right - 255;
 
   leftDir = sign(leftSpeed) == 1 ? LOW : HIGH;
   rightDir = sign(rightSpeed) == 1 ? LOW : HIGH;
@@ -129,25 +124,8 @@ void processCommand(char command[]) {
   leftSpeed = abs(leftSpeed);
   rightSpeed = abs(rightSpeed);
 
-  leftSpeed = min(255, leftSpeed);
-  leftSpeed = max(0, leftSpeed);
-
-  rightSpeed = min(255, rightSpeed);
-  rightSpeed = max(0, rightSpeed);
-
-  if (sign(y) == -1) {
-    int temp = leftSpeed;
-    leftSpeed = rightSpeed;
-    rightSpeed = temp;
-  }
-
-  if (rightDir != leftDir) {
-    if (sign(x) > 0) {
-      rightSpeed = 0;
-    } else {
-      leftSpeed = 0;
-    }
-  }
+  leftSpeed = constrain(leftSpeed, 0, 255);
+  rightSpeed = constrain(rightSpeed, 0, 255);
 }
 
 /**
@@ -387,7 +365,9 @@ void showEyes() {
 void showClosedEyes() {
   displayRight.clearDisplay();
 
-  displayRight.drawLine(40, 7, displayRight.width() - 40, 3, WHITE);
+  displayRight.drawLine(50, 4, displayRight.width() - 50, 4, WHITE);
+  displayRight.drawLine(50, 4, 40, 7, WHITE);
+  displayRight.drawLine(displayRight.width() - 50, 4, displayRight.width() - 40, 7, WHITE);
 
   displayRight.drawRoundRect(displayRight.width() / 2 - OUTER_EYE_WIDTH / 2,
                              displayRight.height() - OUTER_EYE_HEIGHT - 1,
@@ -404,7 +384,9 @@ void showClosedEyes() {
 
   displayLeft.clearDisplay();
 
-  displayLeft.drawLine(40, 3, displayLeft.width() - 40, 7, WHITE);
+  displayLeft.drawLine(50, 4, displayLeft.width() - 50, 4, WHITE);
+  displayLeft.drawLine(50, 4, 40, 7, WHITE);
+  displayLeft.drawLine(displayLeft.width() - 50, 4, displayLeft.width() - 40, 7, WHITE);
 
   displayLeft.drawRoundRect(displayLeft.width() / 2 - OUTER_EYE_WIDTH / 2,
                             displayLeft.height() - OUTER_EYE_HEIGHT - 1,
