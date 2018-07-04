@@ -34,11 +34,11 @@ const uint8_t ldrPin = A0;
 // Calibration settings
 const uint8_t avgCount = 5; // Number of values to use for averaging
 const uint8_t sensorTiming = 20; // Duration of LED pulses in ms
-int whiteThreshold = 500; // Target brightness for automatic calibration
-int blackThreshold = 200; // Brightness cutoff for checking color
+int whiteThreshold = 500; // Target brightness for automatic calibration (automatically adjusted)
+int blackThreshold = 200; // Brightness cutoff for checking color (automatically adjusted)
 const uint8_t detectionThreshold = 80; // Threshold to select color
-int ambientBrightness;
-int redBrightness; // LED pulse brightness (will be automatically adjusted)
+int ambientBrightness; // Variable to store the ambient brightness with the LED off
+int redBrightness; // LED pulse brightness (automatically adjusted)
 int greenBrightness;
 int blueBrightness;
 
