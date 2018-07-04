@@ -69,8 +69,10 @@ float distance;
 float distanceArray[avgCount];
 
 // Variables to store motor settings
-const int defaultSpeed = 150;
+const int defaultSpeed = 175;
 int motorSpeed = defaultSpeed;
+
+int lastColor = 0;
 
 /*
  * Initialize MaP library and calibrate color sensor
@@ -150,32 +152,49 @@ void setup() {
  * Monitor color sensor and perform different actions based on detected color
  */
 void loop() {
-  switch(getColor()){
+  int color = 0;
+  for(int i = 0; i < avgCount; i++) {
+    color = getColor();
+  }
+  
+  switch(color) {
     case 0: // Black
       break;
     case 1: // Red
+      // Back up for 1.5 seconds
       setRGBColor(LED_RED, redBrightness);
-      motorSpeed = defaultSpeed - 50; // Reduce speed
-      obstacleAvoidIR(3); // Avoid three obstacles
-      break;
-    case 2: // Green
-      setRGBColor(LED_GREEN, redBrightness);
-      motorSpeed = defaultSpeed + 100; // Increase speed
-      obstacleAvoidIR(2); // Avoid two obstacles
-      break;
-    case 3: // Blue
-      // Turn right for 1.5 seconds
-      setRGBColor(LED_BLUE, redBrightness);
-      setLeftSpeed(motorSpeed);
-      setRightSpeed(0);
+      setLeftDirection(HIGH);
+      setRightDirection(HIGH);
+      setLeftSpeed(defaultSpeed);
+      setRightSpeed(defaultSpeed);
       delay(1500);
       setLeftSpeed(0);
-      setRightSpeed(0);    
+      setRightSpeed(0);
+      setLeftDirection(LOW);
+      setRightDirection(LOW);
       break;
+    case 2: // Green
+      // Avoid four obstacles quickly 
+      setRGBColor(LED_GREEN, redBrightness);
+      motorSpeed = defaultSpeed + 100; // Increase speed
+      obstacleAvoidIR(4); // Avoid four obstacles
+      break;
+    /*case 3: // Blue
+      // Turn right for 1.5 seconds
+      setRGBColor(LED_BLUE, redBrightness);
+      setLeftSpeed(0);
+      setRightSpeed(motorSpeed);
+      delay(1500);
+      setLeftSpeed(0);
+      setRightSpeed(0);
+      break;*/
     case 4: // Yellow
+      // Avoid twelve obstacles at normal speed
       setRGBColor(LED_YELLOW, redBrightness);
       motorSpeed = defaultSpeed; // Reset speed to default
-      obstacleAvoidIR(6); // Avoid six obstacles
+      obstacleAvoidIR(12); // Avoid twelve obstacles
+      break;
+    default:
       break;
   }
 }
@@ -233,6 +252,9 @@ void obstacleAvoidIR(int count){
 
     objectCounter++;
   }
+
+  setLeftSpeed(0);
+  setRightSpeed(0);
 }
 
 /*
