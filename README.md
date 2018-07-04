@@ -23,9 +23,6 @@ Simple autonomous program that avoids obstacles using the antennae.
 ### SoundDemo
 Autonomous program that will make the Make-A-Pede start driving around when it detects sound.
 
-### RangefinderDemo
-Autonomous program that avoids obstacles using an IR rangefinder.
-
 ### StatusLEDDemo
 Program that will cycle an RGB status LED through its available colors.
 
