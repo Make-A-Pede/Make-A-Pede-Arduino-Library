@@ -29,5 +29,11 @@ Program that will cycle an RGB status LED through its available colors.
 ### PIRDemo
 Autonomous program that will make the Make-A-Pede start driving around when it detects motion.
 
+### ColorDemo
+Program to demonstrate a color sensor built using an RGB LED and an LDR.
+
+### ColorDemoIR
+Autonomous program that avoids obstacles using an IR rangefinder and responds to colored cards.
+
 # Documentation
 See the [wiki](https://github.com/Automata-Development/Make-A-Pede/wiki) for complete documentation.
