@@ -54,8 +54,6 @@ int avgBrightnessArray[avgCount];
 
 // Variables to store calculated color values
 int yellowVal;
-int cyanVal;
-int magentaVal;
 
 void setup() {
   Serial.begin(9600);

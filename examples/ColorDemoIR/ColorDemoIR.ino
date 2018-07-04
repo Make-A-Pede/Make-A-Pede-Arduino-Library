@@ -46,7 +46,7 @@ int ambientBrightness;
 int redBrightness; // LED pulse brightness (will be automatically adjusted)
 int greenBrightness;
 int blueBrightness;
-// Conversion from sensor reading (x) to distance (y): y = kM * x^kP
+// Conversion from IR sensor reading (x) to distance (y): y = kM * x^kP
 // Values found using Excel to record sensor output from serial monitor and plot a trendline
 const float kM = 1109.2;
 const float kP = -1.061;
@@ -69,11 +69,14 @@ float distance;
 float distanceArray[avgCount];
 
 // Variables to store motor settings
-const int defaultSpeed = 150;
+const int defaultSpeed = 175;
 int motorSpeed = defaultSpeed;
 
-uint8_t cycles = 0;
+int lastColor = 0;
 
+/*
+ * Initialize MaP library and calibrate color sensor
+ */
 void setup() {
   Serial.begin(9600);
 
@@ -145,72 +148,113 @@ void setup() {
   distance = convertToInches(analogRead(rangefinderPin));
 }
 
-void loop() {   
-  // Set the motors to run forwards
-  setLeftDirection(LOW);
-  setRightDirection(LOW);
-  
-  // Wait for an obstacle to be < 8" away
-  while (distance > 8){
-    //Read the sensor and convert to inches
-    distance = convertToInches(analogRead(rangefinderPin));
-
-    if (cycles > 9) {
-      switch(getColor()){
-        case 0: // Black
-          // motorSpeed = defaultSpeed;
-          break;
-        case 1: // Red
-          motorSpeed = 0;
-          break;
-        case 2: // Green
-          motorSpeed = defaultSpeed + 100;
-          break;
-        case 3: // Blue
-          break;
-        case 4: // Yellow
-          break;
-      }
-
-      cycles = 0;
-    }
-
-    //Serial.println(motorSpeed);
-
-    // Run the motors
-    setLeftSpeed(motorSpeed+15);
-    setRightSpeed(motorSpeed-15);
-
-    cycles++;
+/*
+ * Monitor color sensor and perform different actions based on detected color
+ */
+void loop() {
+  int color = 0;
+  for(int i = 0; i < avgCount; i++) {
+    color = getColor();
   }
-
-  motorSpeed = defaultSpeed;
   
-  // Turn left
-  setLeftSpeed(0);
-  setRightSpeed(motorSpeed);
-     
-  // Wait for obstacle to be > 8" away
-  int loopCounter = 0;
-  while (distance < 8){
-    //Read the sensor and convert to inches
-    distance = convertToInches(analogRead(rangefinderPin));
-
-    // If object is too close or timeout has expired
-    if((loopCounter > 1000) || (distance < 2)) {
-      // Back up
-      setLeftSpeed(motorSpeed);
-      setRightSpeed(motorSpeed);
+  switch(color) {
+    case 0: // Black
+      break;
+    case 1: // Red
+      // Back up for 1.5 seconds
+      setRGBColor(LED_RED, redBrightness);
       setLeftDirection(HIGH);
       setRightDirection(HIGH);
-
-      delay(750);
+      setLeftSpeed(defaultSpeed);
+      setRightSpeed(defaultSpeed);
+      delay(1500);
+      setLeftSpeed(0);
+      setRightSpeed(0);
+      setLeftDirection(LOW);
+      setRightDirection(LOW);
       break;
+    case 2: // Green
+      // Avoid four obstacles quickly 
+      setRGBColor(LED_GREEN, redBrightness);
+      motorSpeed = defaultSpeed + 100; // Increase speed
+      obstacleAvoidIR(4); // Avoid four obstacles
+      break;
+    /*case 3: // Blue
+      // Turn right for 1.5 seconds
+      setRGBColor(LED_BLUE, redBrightness);
+      setLeftSpeed(0);
+      setRightSpeed(motorSpeed);
+      delay(1500);
+      setLeftSpeed(0);
+      setRightSpeed(0);
+      break;*/
+    case 4: // Yellow
+      // Avoid twelve obstacles at normal speed
+      setRGBColor(LED_YELLOW, redBrightness);
+      motorSpeed = defaultSpeed; // Reset speed to default
+      obstacleAvoidIR(12); // Avoid twelve obstacles
+      break;
+    default:
+      break;
+  }
+}
+
+/*
+ * Avoid obstacles using an IR sensor
+ * count is the number of obstacles to avoid
+ */
+void obstacleAvoidIR(int count){
+  int objectCounter = 0;
+  while(objectCounter < count) {
+    // Set the motors to run forwards
+    setLeftDirection(LOW);
+    setRightDirection(LOW);
+    
+    // Wait for an obstacle to be < 8" away
+    while(distance > 8) {
+      //Read the sensor and convert to inches
+      distance = convertToInches(analogRead(rangefinderPin));
+  
+      // Run the motors
+      setLeftSpeed(motorSpeed+15);
+      setRightSpeed(motorSpeed-15);
+    }
+    
+    // Turn left
+    setLeftSpeed(0);
+    setRightSpeed(motorSpeed);
+       
+    // Wait for obstacle to be > 8" away
+    int loopCounter = 0;
+    while(distance < 8) {
+      //Read the sensor and convert to inches
+      distance = convertToInches(analogRead(rangefinderPin));
+  
+      // If object is too close or timeout has expired
+      if((loopCounter > 1000) || (distance < 2)) {
+        // Back up
+        setLeftSpeed(defaultSpeed);
+        setRightSpeed(defaultSpeed);
+        setLeftDirection(HIGH);
+        setRightDirection(HIGH);
+  
+        delay(750);
+        break;
+      }
+  
+      loopCounter++;
+      delay(10);
     }
 
-    loopCounter++;
-    delay(10);
+    // Set the motors to run forwards
+    setLeftDirection(LOW);
+    setRightDirection(LOW);
+
+    objectCounter++;
   }
+
+  setLeftSpeed(0);
+  setRightSpeed(0);
 }
 
 /*

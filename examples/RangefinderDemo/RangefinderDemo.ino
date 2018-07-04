@@ -33,10 +33,13 @@ const uint8_t rangefinderPin = A1;
 
 // Calibration settings
 const uint8_t avgCount = 10; // Number of values to use for averaging
-// Conversion from sensor reading (x) to distance (y): y = kM * x^kP
+// Conversion from IR sensor reading (x) to distance (y): y = kM * x^kP
 // Values found using Excel to record sensor output from serial monitor and plot a trendline
 const float kM = 1109.2;
 const float kP = -1.061;
+
+// Variables to store motor settings
+const int motorSpeed = 175;
 
 // Variable to store sensor readings
 float distance;
@@ -64,8 +67,8 @@ void loop() {
   setRightDirection(LOW);
   
   // Run the motors forward
-  setLeftSpeed(180);
-  setRightSpeed(150);
+  setLeftSpeed(motorSpeed+15);
+  setRightSpeed(motorSpeed-15);
   
   // Wait for an obstacle to be < 8" away
   while (distance > 8){
@@ -78,7 +81,7 @@ void loop() {
   
   // Turn left
   setLeftSpeed(0);
-  setRightSpeed(160);
+  setRightSpeed(motorSpeed);
      
   // Wait for obstacle to be > 8" away
   int loopCounter = 0;
@@ -92,10 +95,13 @@ void loop() {
     // If object is too close or timeout has expired
     if((loopCounter > 1000) || (distance < 2)) {
       // Back up
-      setLeftSpeed(160);
-      setRightSpeed(160);
+      setLeftSpeed(motorSpeed);
+      setRightSpeed(motorSpeed);
       setLeftDirection(HIGH);
       setRightDirection(HIGH);
+
+      delay(750);
+      break;
     }
 
     loopCounter++;
