@@ -59,8 +59,6 @@ extern int redPin;
 extern int greenPin;
 extern int bluePin;
 
-extern HardwareSerial Serial;
-
 void setupMaP(int lsp = 5, int ldp = 4, int rsp = 6, int rdp = 7, int lap = 12, int rap = 13);
 void setupRGB(int rp = 9, int gp = 10, int bp = 11);
 
